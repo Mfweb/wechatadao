@@ -1,13 +1,41 @@
 var WxParse = require('../../wxParse/wxParse.js');
 var url = "https://h.nimingban.com/Api/showf";
 var furl = "https://h.nimingban.com/Api/getForumList";
-var page = 1;
-var page_id = -1;
-var page_in = 1;
+var page = 1;//当前在多少页
+var page_id = -1;//板块号
+var page_in = 1;//输入的页数
+
+
+//修改标题为当前板块
+var GetTitle = function(that)
+{
+  
+  //console.log(that.data.flist);
+  //console.log(page_id);
+  //console.log(that.data.flist.length);
+
+  for(let i = 0;i < that.data.flist.length;i++)
+  {
+    for(let j = 0;j < that.data.flist[i].forums.length;j++)
+    {
+      
+      if(that.data.flist[i].forums[j].id == page_id)
+      {
+        var title_temp = that.data.flist[i].forums[j].name;
+        //console.log(title_temp);
+        wx.setNavigationBarTitle({
+          title: title_temp,
+          success: function(res) {}
+        });
+        return title_temp;
+      }
+    }
+  }
+}
 //获取板块内串
 var GetList = function(that)
 {
-  //that.setData({hidden:false});
+  that.setData({hidden:false});
   wx.request(
   {
     url:url,
@@ -42,6 +70,7 @@ var GetList = function(that)
         that.setData({list : list});
         page ++;
       }
+
       that.setData({hidden:true});
       wx.showToast({
         title: '加载成功',
@@ -66,7 +95,7 @@ var GetList = function(that)
 //获取板块列表
 var GetFList = function(that)
 {
-  //that.setData({hidden:false});
+  that.setData({hidden:false});
   wx.request(
   {
     url:furl,
@@ -81,7 +110,8 @@ var GetFList = function(that)
     {
       //console.log(res);
       var appInstance = getApp();
-      var list_temp = [];
+      var list_temp = [];//板块列表
+
       if(res.data.length > 0)
       {
         for(let i = 0; i < res.data.length; i++)
@@ -119,7 +149,8 @@ var refGet = function(that)
     list : [],
     scrollTop : 0
   });
-  GetList(that)
+  GetList(that);
+  return GetTitle(that);
 }
 
 Page(
@@ -137,20 +168,31 @@ Page(
   {
     var that = this;
     GetFList(that);
-    var select_f = wx.getStorageSync('SelectForum');
+    var select_n = wx.getStorageSync('SelectForumName');
+    if(select_n != "")
+      wx.setNavigationBarTitle({
+        title: select_n,
+        success: function(res) {
+          // success
+        }
+      });
+    var select_f = wx.getStorageSync('SelectForumID');
     if(select_f != "")
       page_id = select_f;
     else
       return;
-
     GetList(that);
-    
   },
 
   onShow:function(e)
   {
-    if(page_id==-1)
+    if(page_id==-1)//如果没有保存板块，就打开选择栏
       this.setData({open : true});
+    else
+    {
+      var that = this;
+      GetTitle(that);
+    }
   },
 
   bind_view_tap: function(e)//单击
@@ -248,9 +290,10 @@ Page(
   {
     var that = this;
     //console.log(e);
-    wx.setStorageSync('SelectForum', e['currentTarget'].id)
+    wx.setStorageSync('SelectForumID', e['currentTarget'].id);
     page_id = e['currentTarget'].id;
-    refGet(that);
+    var bk_name = refGet(that);
+    wx.setStorageSync('SelectForumName', bk_name);
     this.setData({open : false});
   }
 

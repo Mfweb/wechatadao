@@ -23,7 +23,6 @@
 
 .img{/*缩略图*/
   width: 90%;
-  display:block;
   margin:0 auto;
 }
 
@@ -66,12 +65,21 @@
   color:#f00;
 }
 
-.readcount{/*回应数*/
-  color:#00CCFF;
+.sage{/*SAGE*/
+  color:#f00;
   font-size: 12px;
   margin-right: 10px;
   margin-top: 10px;
   text-align: right;
+
+}
+
+.readcount{/*回应数*/
+  color:#00CCFF;
+  font-size: 12px;
+  margin-left: 10px;
+  margin-top: 10px;
+  text-align: left;
 }
 
 .footer{/*低栏*/

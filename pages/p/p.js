@@ -37,7 +37,8 @@ var GetList = function(that)
           'title':res.data.title,
           'html':WxParse.wxParse('item', 'html', res.data.content, that,5),
           'admin':res.data.admin,
-          'replayCount':res.data.replayCount
+          'replyCount':res.data.replyCount,
+          'sage':res.data.sage
           };
           if(res.data.img!="")
           {

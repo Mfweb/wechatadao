@@ -23,6 +23,11 @@
       </view>
 
       <image hidden="{{!item.img}}" class="img" src="{{item.thumburl}}{{item.img}}" mode="aspectFit" bindtap="bind_pic_tap" id = "{{item.img}}"></image>
+      <view class="b1" wx:if="{{index==0}}">
+        <view class="readcount">回应：{{item.replyCount}}</view>
+        <view class="sage" hidden="{{item.sage==0?true:false}}">SAGE</view>
+      </view>
+
       <view class="v_hr"></view>
     </view>
 </view>
