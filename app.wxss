@@ -1,0 +1,114 @@
+/**app.wxss**/
+@import "wxParse/wxParse.wxss";
+.container {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10rpx 0;
+  box-sizing: border-box;
+  width: 100%;
+  background: #F5F5F5;
+  font-family: 'PingFang SC', 'Helvetica Neue', Helvetica, 'Droid Sans Fallback', 'Microsoft Yahei', sans-serif;
+  position: absolute;
+  z-index:0;
+} 
+
+.item{/*主列表*/
+  width: 92%;
+  height: auto;
+  margin: 15px 0px 0px 0px;
+}
+
+.img{/*缩略图*/
+  width: 90%;
+  display:block;
+  margin:0 auto;
+}
+
+.v_hr{/*主串列表分割线*/
+  height: 1px;
+  width: 90%;
+  margin: 15px auto;
+  background: #A1A1A1;
+  border: 1px solid #C4C4C4;
+  border-radius: 2px;
+}
+.v_hr_f1{/*板块列表分割线*/
+  height: 1px;
+  width: 90%;
+  margin: 0px auto;
+  background: #A1A1A1;
+  border: 1px solid #C4C4C4;
+  border-radius: 2px;
+}
+
+.b1{/*第一行信息栏 ID UID 时间*/
+  display:flex;
+  color:#00CCFF;
+  font-size: 12px;
+  justify-content: space-between;
+}
+
+
+.b2{/*第二第三行信息栏 标题 姓名*/
+  display:block;
+  font-size: 12px;
+  color: #A6A6A6;
+  margin: 0px 0px 10px 0px;
+}
+.title{/*标题*/
+ word-break:break-all;
+}
+
+.xuankuhongming{/*炫酷红名*/
+  color:#f00;
+}
+
+.readcount{/*回应数*/
+  color:#00CCFF;
+  font-size: 12px;
+  margin-right: 10px;
+  margin-top: 10px;
+  text-align: right;
+}
+
+.footer{/*低栏*/
+  display:flex;
+  justify-content: space-between;
+  bottom: 0pt;
+	margin: 0pt;
+  position: fixed;
+  margin-bottom:0px;
+  width: 100%;
+  background-color: #00CCFF;
+    transition: All 0.4s ease; 
+  -webkit-transition: All 0.4s ease;
+}
+
+.icons{/*底栏图标*/
+  width: 30px;
+  height: 30px;
+}
+
+.fliststl{/*板块列表外框*/
+  font-family: 'PingFang SC', 'Helvetica Neue', Helvetica, 'Droid Sans Fallback', 'Microsoft Yahei', sans-serif;
+  width: 100%;
+  left: 0;
+  display: block;
+  margin: 10px auto;
+  margin-left: 10px;
+  margin-bottom: 30px;
+  height: 100%;
+}
+
+.flist_group{/*板块group*/
+  margin-top: 10px;
+  width: 100%;
+  font-size: 15px;
+}
+.flist_f{/*板块*/
+  margin: 2px 2px 2px 10px;
+  font-size: 20px;
+}

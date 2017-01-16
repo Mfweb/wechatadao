@@ -1,0 +1,28 @@
+<!--index.wxml-->
+<import src="../../wxParse/wxParse.wxml"/>
+
+<view class="container">
+  <view class="body-view">
+    <loading hidden="{{hidden}}" bindchange="loadingChange">
+      加载中...
+    </loading>
+  </view>
+  
+    <view class="item" wx:for="{{list}}" wx:key="wxKey" id="{{item.id}}" bindtap="bind_view_tap">
+      <view class="text">
+        <view class="b1">
+          <view class="cid">{{item.id}}</view>
+          <view class="uid">{{item.userid}}</view>
+          <view class="stime">{{item.now}}</view>
+        </view>
+        <view class="b2">
+          <view class="title">{{item.title}}</view>
+          <view class="uname">{{item.name}}</view>
+        </view>
+        <template is="wxParse" data="{{wxParseData:item.html.nodes}}"/>
+      </view>
+
+      <image hidden="{{!item.img}}" class="img" src="{{item.thumburl}}{{item.img}}" mode="aspectFit" bindtap="bind_pic_tap" id = "{{item.img}}"></image>
+      <view class="v_hr"></view>
+    </view>
+</view>

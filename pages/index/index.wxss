@@ -1,0 +1,36 @@
+/**index.wxss**/
+.c-state1{
+  transform: rotate(0deg) scale(1) translate(100%,0%); 
+  -webkit-transform: rotate(0deg) scale(1) translate(100%,0%); 
+}
+.c-state2{
+  transform: rotate(0deg) scale(1) translate(50%,0%); 
+  -webkit-transform: rotate(0deg) scale(1) translate(50%,0%); 
+}
+.left_menu{/*左侧板块列表*/
+  display: flex;
+  position: fixed;
+  margin: 0px;
+  width: 50%;
+  margin-left: -52%;
+  margin-top: 0px;
+  background: #DBDBDB;
+  height: 100%;
+  transition: All 0.4s ease; 
+  -webkit-transition: All 0.4s ease;
+  z-index:4;
+  box-shadow: 0px 0px 6px 0px #fff;
+}
+.box{/*遮罩层*/
+  position:fixed;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  background:#000;
+  opacity:0.7;
+  z-index:1;
+}
+.input_cs{
+  border: 1px solid #FF8000;
+}

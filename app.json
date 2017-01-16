@@ -1,0 +1,13 @@
+{
+  "pages":[
+    "pages/index/index",
+    "pages/p/p"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#00CCFF",
+    "navigationBarTitleText": "A岛",
+    "navigationBarTextStyle":"black",
+    "backgroundColor": "#F5F5F5"
+  }
+}
