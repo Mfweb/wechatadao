@@ -1,6 +1,8 @@
 # wechatadao
 A岛微信小程序
 
+最近没开饼干，所以还没做饼干管理和发/回串，下次开饼干的时候做。
+
 使用了wxParse微信小程序富文本解析
 https://github.com/icindy/wxParse
 
