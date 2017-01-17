@@ -120,7 +120,7 @@ var GetFList = function(that)
         }
         that.setData({flist : list_temp});
       }
-      that.setData({hidden:true});
+      that.setData({hidden:true,f_image:"http://cover.acfunwiki.org/cover.php"});
       /*wx.showToast({
         title: '板块列表加载成功',
         icon: 'success',
@@ -161,7 +161,8 @@ Page(
     list:[],//主列表
     flist:[],//板块列表
     open : false,//显示板块列表
-    modalFlag:true//显示跳转页面
+    modalFlag:true,//显示跳转页面
+    f_image:""
   },
   
   onLoad:function()

@@ -6,6 +6,7 @@
 <!--板块选择-->
 <view class="left_menu {{open ? 'c-state1' : ''}}">
   <scroll-view class="fliststl" scroll-y="true">
+  <image class="f_image" src="{{f_image}}" mode="aspectFit"></image>
     <view wx:for="{{flist}}" wx:key="fwxKey">
       <view class="flist_group">{{item.name}}</view>
       <view class="v_hr_f1"></view>
@@ -20,7 +21,7 @@
 <input class="input_cs" type="number" value="" bindinput="page_input" />
 </modal>
 <!--主列表-->
-<view class="container">
+<view class="container {{open ? 'c-state3' : ''}}">
   <view class="item" wx:for="{{list}}" wx:key="wxKey" id="{{item.id}}" bindtap="bind_view_tap">
     <view class="text">
       <view class="b1">

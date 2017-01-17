@@ -7,6 +7,12 @@
   transform: rotate(0deg) scale(1) translate(50%,0%); 
   -webkit-transform: rotate(0deg) scale(1) translate(50%,0%); 
 }
+
+.c-state3{
+  transform: rotate(0deg) scale(1) translate(50%,0%); 
+  -webkit-transform: rotate(0deg) scale(1) translate(50%,0%); 
+}
+
 .left_menu{/*左侧板块列表*/
   display: flex;
   position: fixed;
@@ -33,4 +39,7 @@
 }
 .input_cs{
   border: 1px solid #FF8000;
+}
+.f_image{
+  width: 100%;
 }
