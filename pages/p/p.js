@@ -26,7 +26,7 @@ var GetList = function(that)
       //console.log(res);
       var appInstance = getApp();
       var list = that.data.list;
-      if(page ==1 && list.length == 0)//第一页
+      if(page ==1 && list.length == 0)//第一页 添加正文内容
       {
         var header = {
           'id':res.data.id,
@@ -51,9 +51,13 @@ var GetList = function(that)
             header.thumburl= "";
           }
           list.push(header);
+          wx.setNavigationBarTitle({//设置标题
+            title: list[0].title,
+            success: function(res) {}
+          });
         }
 
-      if(res.data.replys.length > 0)
+      if(res.data.replys.length > 0)//本次拉取的数量大于0就push
       {
         for(let i = 0; i < res.data.replys.length; i++)
         {
@@ -69,7 +73,7 @@ var GetList = function(that)
         that.setData({list : list});
         page ++;
       }
-      else
+      else//本次没有拉取到
       {
         if(page == 1)
         {
@@ -83,15 +87,6 @@ var GetList = function(that)
       }
       //console.log(list);
       that.setData({hidden:true});
-      if(res.data.replys.length>0)
-      {
-        wx.showToast({
-          title: '加载成功',
-          icon: 'success',
-          duration: 500
-        })
-      }
-
     },
     fail:function()
     {

@@ -72,11 +72,11 @@ var GetList = function(that)
       }
 
       that.setData({hidden:true});
-      wx.showToast({
+      /*wx.showToast({
         title: '加载成功',
         icon: 'success',
         duration: 500
-      })
+      })*/
     },
 
     fail:function()
@@ -121,11 +121,11 @@ var GetFList = function(that)
         that.setData({flist : list_temp});
       }
       that.setData({hidden:true});
-      wx.showToast({
+      /*wx.showToast({
         title: '板块列表加载成功',
         icon: 'success',
         duration: 500
-      })
+      })*/
     },
 
     fail:function()
