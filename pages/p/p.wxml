@@ -12,7 +12,7 @@
       <view class="text">
         <view class="b1">
           <view class="cid">{{item.id}}</view>
-          <view class="uid">{{item.userid}}</view>
+          <view class="uid {{list[0].userid==item.userid?'po':''}}">{{item.userid}}</view>
           <view class="stime">{{item.now}}</view>
         </view>
         <view class="b2">

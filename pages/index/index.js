@@ -162,7 +162,7 @@ Page(
     flist:[],//板块列表
     open : false,//显示板块列表
     modalFlag:true,//显示跳转页面
-    f_image:""
+    f_image:""//首页图片
   },
   
   onLoad:function()
@@ -296,6 +296,10 @@ Page(
     var bk_name = refGet(that);
     wx.setStorageSync('SelectForumName', bk_name);
     this.setData({open : false});
-  }
+  },
 
+  tap_nw : function()//发新串
+  {
+    this.setData({NewmodalFlag:false,new_text_focus:true});
+  }
 })

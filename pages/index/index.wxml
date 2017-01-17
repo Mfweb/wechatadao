@@ -17,6 +17,7 @@
     <view class="flist_f">\n</view>
   </scroll-view>
 </view>
+<!--跳转到某一页-->
 <modal title="输入要跳转的页数" hidden="{{modalFlag}}" bindconfirm="modalOk" bindcancel="modalCancel" confirm-text="确定" cancel-text="取消">
 <input class="input_cs" type="number" value="" bindinput="page_input" />
 </modal>
@@ -46,10 +47,10 @@
     <view class="v_hr"></view>
   </view>
 
-  <view class="footer {{open ? 'c-state2' : ''}}">
+  <view class="footer">
     <image bindtap="tap_ch" mode="aspectFit" class="icons" src="../../icons/menu.png"></image>
     <image bindtap="tap_sl" mode="aspectFit" class="icons" src="../../icons/goto.png"></image>
-    <image mode="aspectFit" class="icons" src="../../icons/new.png"></image>
+    <image bindtap="tap_nw" mode="aspectFit" class="icons" src="../../icons/new.png"></image>
   </view>
 </view>
 
