@@ -1,0 +1,35 @@
+
+.backg{
+    height: 100%;
+}
+.new_tx{
+  width: 98%;
+  height: 250px;
+  margin: 0 auto;
+}
+.form_cs{
+    width: 98%;
+    margin: 0 auto;
+}
+.post_rev{
+    width: 80%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.tool{
+    display: flex;
+    justify-content: space-between;
+}
+.sicons{
+    height: 40px;
+    width: 40ox;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+.s_img{
+    height: 250px;
+    margin: 0 auto;
+    position: absolute;
+    margin-top: 0px;
+    opacity:0.4;
+}

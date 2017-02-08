@@ -1,7 +1,9 @@
 {
   "pages":[
     "pages/index/index",
-    "pages/p/p"
+    "pages/p/p",
+    "pages/new/new",
+    "pages/cookie_manager/cookie_manager"
   ],
   "window":{
     "backgroundTextStyle":"light",

@@ -1,0 +1,25 @@
+<view class="container backg">
+    <view class="form_cs">
+        <form bindsubmit="form_submit">
+            <image class="s_img" src="{{select_image}}" mode="aspectFit" hidden="{{select_image_hid}}"></image>
+            <input name="watermark" hidden="true" value="{{watermark}}"/>
+            <input name="pic" hidden="true" value="{{select_image}}"/>
+            <textarea name="text" class="new_tx" focus="{{txt_focus}}" value="{{txt_value}}"/>
+            <view class="v_hr"></view>
+            <view class="tool">
+                <image bindtap="he_tp" mode="aspectFit" class="sicons" src="../../icons/h-emot.png"></image>
+                <image bindtap="pc_tp" mode="aspectFit" class="sicons" src="../../icons/picture.png"></image>
+                <image bindtap="cl_tp" mode="aspectFit" class="sicons" src="../../icons/clear.png"></image>
+            </view>
+            
+            <button class="post_rev" type="primary" form-type="submit" bindtap="onSubmit">提交</button>
+            <button class="post_rev" type="warn" form-type="reset" bindtap="onCancel">取消</button>
+        </form>
+    </view>
+</view>
+
+<view class="body-view">
+  <loading hidden="{{hidden}}" bindchange="loadingChange">
+      加载中...
+  </loading>
+</view>

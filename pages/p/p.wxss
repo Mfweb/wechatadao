@@ -3,3 +3,9 @@
 .po{
     background-color: #EED2EE;
 }
+
+.list_bot{
+    width: 100%;
+    background: #F5F5F5;
+    height: 45px;
+}

@@ -1,32 +1,21 @@
-var WxParse = require('../../wxParse/wxParse.js');
-var url = "https://h.nimingban.com/Api/showf";
-var furl = "https://h.nimingban.com/Api/getForumList";
-var page = 1;//当前在多少页
-var page_id = -1;//板块号
-var page_in = 1;//输入的页数
-
+var WxParse   = require('../../wxParse/wxParse.js');
+var page      = 1;//当前在多少页
+var page_id   = -1;//板块号
+var page_in   = 1;//输入的页数
+var appInstance = getApp();
+var pw_run = false;//防止下拉刷新清空列表的时候触发上拉加载
 
 //修改标题为当前板块
 var GetTitle = function(that)
 {
-  
-  //console.log(that.data.flist);
-  //console.log(page_id);
-  //console.log(that.data.flist.length);
-
   for(let i = 0;i < that.data.flist.length;i++)
   {
     for(let j = 0;j < that.data.flist[i].forums.length;j++)
     {
-      
       if(that.data.flist[i].forums[j].id == page_id)
       {
         var title_temp = that.data.flist[i].forums[j].name;
-        //console.log(title_temp);
-        wx.setNavigationBarTitle({
-          title: title_temp,
-          success: function(res) {}
-        });
+        wx.setNavigationBarTitle({title: title_temp});
         return title_temp;
       }
     }
@@ -38,7 +27,7 @@ var GetList = function(that)
   that.setData({hidden:false});
   wx.request(
   {
-    url:url,
+    url:appInstance.globalData.show_forum_url,
     data:
     {
       id : page_id,
@@ -46,14 +35,14 @@ var GetList = function(that)
     },
     header:
     {
-      //'User-Agent' : 'HavfunClient-WeChatAPP',//好像不允许修改
-      'content-type' : 'application/json'
+      'User-Agent' : 'HavfunClient-WeChatAPP',//好像不允许修改(仿真工具不可以 真机可以)
+      'content-type' : 'multipart/form-data',
+      'X-Requested-With':'XMLHttpRequest'
     },
 
     success:function(res)
     {
-      var appInstance = getApp();
-      //console.log(res);
+
       var list = that.data.list;
       if(res.data.length > 0)
       {
@@ -72,11 +61,6 @@ var GetList = function(that)
       }
 
       that.setData({hidden:true});
-      /*wx.showToast({
-        title: '加载成功',
-        icon: 'success',
-        duration: 500
-      })*/
     },
 
     fail:function()
@@ -87,6 +71,10 @@ var GetList = function(that)
           icon: 'success',
           duration: 500
         })
+    },
+    complete:function()
+    {
+      pw_run = false;
     }
   });
 }
@@ -98,18 +86,18 @@ var GetFList = function(that)
   that.setData({hidden:false});
   wx.request(
   {
-    url:furl,
+    url:appInstance.globalData.get_forum_url,
     data:{},
     header:
     {
-      //'User-Agent' : 'HavfunClient-WeChatAPP',//好像不允许修改
-      'content-type' : 'application/json'
+      'User-Agent' : 'HavfunClient-WeChatAPP',
+      'content-type' : 'application/json',
+      'X-Requested-With':'XMLHttpRequest'
     },
 
     success:function(res)
     {
-      //console.log(res);
-      var appInstance = getApp();
+
       var list_temp = [];//板块列表
 
       if(res.data.length > 0)
@@ -121,11 +109,6 @@ var GetFList = function(that)
         that.setData({flist : list_temp});
       }
       that.setData({hidden:true,f_image:"http://cover.acfunwiki.org/cover.php"});
-      /*wx.showToast({
-        title: '板块列表加载成功',
-        icon: 'success',
-        duration: 500
-      })*/
     },
 
     fail:function()
@@ -162,6 +145,7 @@ Page(
     flist:[],//板块列表
     open : false,//显示板块列表
     modalFlag:true,//显示跳转页面
+    default_page:1,//跳转页面默认值
     f_image:""//首页图片
   },
   
@@ -171,12 +155,7 @@ Page(
     GetFList(that);
     var select_n = wx.getStorageSync('SelectForumName');
     if(select_n != "")
-      wx.setNavigationBarTitle({
-        title: select_n,
-        success: function(res) {
-          // success
-        }
-      });
+      wx.setNavigationBarTitle({title: select_n});
     var select_f = wx.getStorageSync('SelectForumID');
     if(select_f != "")
       page_id = select_f;
@@ -199,13 +178,12 @@ Page(
   bind_view_tap: function(e)//单击
   {
     if(e.target.id!="")return;
-    //console.log(e);//currentTarget
     wx.navigateTo({url: '../p/p?id=' + e['currentTarget'].id});
   },
 
   bind_pic_tap: function(e)//单击图片
   {
-    var appInstance = getApp();
+
     var pr_imgs = [appInstance.globalData.full_img_url + e['currentTarget'].id];
     wx.previewImage({
       current: appInstance.globalData.thumb_img_url + e['currentTarget'].id,
@@ -215,6 +193,7 @@ Page(
   
   onPullDownRefresh: function()//下拉刷新
   {
+    pw_run = true;
     var that = this;
     refGet(that);
     wx.stopPullDownRefresh()
@@ -222,6 +201,7 @@ Page(
 
   onReachBottom: function ()//上拉加载更多
   {
+    if(pw_run)return;
     var that = this;
     GetList(that);
   },
@@ -240,13 +220,12 @@ Page(
 
   tap_sl: function(e)//跳转到某一页
   {
-    page_in = -1;
-    this.setData({modalFlag:false});
+    page_in = 1;
+    this.setData({modalFlag:false,default_page:1});
   },
   modalOk: function(e)//设置好了跳转到某一页回来
   {  
     this.setData({modalFlag:true});
-    //console.log(page_in);
     if(page_in<=0)
     {
       wx.showModal(
@@ -290,7 +269,6 @@ Page(
   bind_fview_tap: function(e)//选择某个版块
   {
     var that = this;
-    //console.log(e);
     wx.setStorageSync('SelectForumID', e['currentTarget'].id);
     page_id = e['currentTarget'].id;
     var bk_name = refGet(that);
@@ -300,6 +278,6 @@ Page(
 
   tap_nw : function()//发新串
   {
-    this.setData({NewmodalFlag:false,new_text_focus:true});
+    wx.navigateTo({url: '../new/new?mode=1&revid=' + page_id});
   }
 })

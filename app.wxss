@@ -29,7 +29,7 @@
 }
 
 .img{/*缩略图*/
-  width: 90%;
+  max-width: 60%;
   margin:0 auto;
 }
 
@@ -103,8 +103,9 @@
 }
 
 .icons{/*底栏图标*/
-  width: 30px;
-  height: 30px;
+  width: 45px;
+  height: 45px;
+  margin: 0px 15px 0px 15px;
 }
 
 .fliststl{/*板块列表外框*/
@@ -126,11 +127,4 @@
 .flist_f{/*板块*/
   margin: 2px 2px 2px 10px;
   font-size: 20px;
-}
-
-.new_tx{
-  width: 98%;
-  height: 200px;
-  border: 1px solid #00CCFF;
-  margin: 0 auto;
 }

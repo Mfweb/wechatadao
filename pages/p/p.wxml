@@ -2,32 +2,40 @@
 <import src="../../wxParse/wxParse.wxml"/>
 
 <view class="container">
-  <view class="body-view">
-    <loading hidden="{{hidden}}" bindchange="loadingChange">
-      加载中...
-    </loading>
-  </view>
-  
-    <view class="item" wx:for="{{list}}" wx:key="wxKey" id="{{item.id}}" bindtap="bind_view_tap">
-      <view class="text">
-        <view class="b1">
-          <view class="cid">{{item.id}}</view>
-          <view class="uid {{list[0].userid==item.userid?'po':''}}">{{item.userid}}</view>
-          <view class="stime">{{item.now}}</view>
-        </view>
-        <view class="b2">
-          <view class="title">{{item.title}}</view>
-          <view class="uname">{{item.name}}</view>
-        </view>
-        <template is="wxParse" data="{{wxParseData:item.html.nodes}}"/>
+  <view class="item" wx:for="{{list}}" wx:key="wxKey" id="{{item.id}}" bindtap="bind_view_tap">
+    <view class="text">
+      <view class="b1">
+        <view class="cid">{{item.id}}</view>
+        <view class="uid {{list[0].userid==item.userid?'po':''}} {{item.admin == 1?'xuankuhongming':''}}">{{item.userid}}</view>
+        <view class="stime">{{item.now}}</view>
       </view>
-
-      <image hidden="{{!item.img}}" class="img" src="{{item.thumburl}}{{item.img}}" mode="aspectFit" bindtap="bind_pic_tap" id = "{{item.img}}"></image>
-      <view class="b1" wx:if="{{index==0}}">
-        <view class="readcount">回应：{{item.replyCount}}</view>
-        <view class="sage" hidden="{{item.sage==0?true:false}}">SAGE</view>
+      <view class="b2">
+        <view class="title" wx:if="{{item.title!='无标题'}}" >{{item.title}}</view>
+        <view class="uname" wx:if="{{item.name!='无名氏'}}" >{{item.name}}</view>
       </view>
-
-      <view class="v_hr"></view>
+      <template is="wxParse" data="{{wxParseData:item.html.nodes}}"/>
     </view>
+
+    <image hidden="{{!item.img}}" class="img" src="{{item.thumburl}}{{item.img}}" mode="aspectFit" bindtap="bind_pic_tap" id = "{{item.img}}"></image>
+    <view class="b1" wx:if="{{index==0}}">
+      <view class="readcount">回应：{{item.replyCount}}</view>
+      <view class="sage" hidden="{{item.sage==0?true:false}}">SAGE</view>
+    </view>
+
+    <view class="v_hr"></view>
+  </view>
+  <view class="list_bot"></view>
+</view>
+
+<view class="body-view">
+  <loading hidden="{{hidden}}" bindchange="loadingChange">
+      加载中...
+  </loading>
+</view>
+
+<view class="footer">
+  <image bindtap="" mode="aspectFit" class="icons" src="../../icons/110.png"></image>
+  <image bindtap="" mode="aspectFit" class="icons" src="../../icons/star.png"></image>
+  <image bindtap="" mode="aspectFit" class="icons" src="../../icons/goto.png"></image>
+  <image bindtap="tap_nw" mode="aspectFit" class="icons" src="../../icons/new.png"></image>
 </view>

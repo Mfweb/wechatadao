@@ -10,7 +10,7 @@
     <view wx:for="{{flist}}" wx:key="fwxKey">
       <view class="flist_group">{{item.name}}</view>
       <view class="v_hr_f1"></view>
-      <view wx:for="{{item.forums}}" wx:key="fwxKey" id="{{item.id}}" bindtap="bind_fview_tap">
+      <view wx:for="{{item.forums}}" id="{{item.id}}" bindtap="bind_fview_tap">
         <view class="flist_f">{{item.name}}</view>
       </view>
     </view>
@@ -19,42 +19,40 @@
 </view>
 <!--跳转到某一页-->
 <modal title="输入要跳转的页数" hidden="{{modalFlag}}" bindconfirm="modalOk" bindcancel="modalCancel" confirm-text="确定" cancel-text="取消">
-<input class="input_cs" type="number" value="" bindinput="page_input" />
+<input class="input_cs" type="number" value="{{default_page}}" bindinput="page_input" />
 </modal>
 <!--主列表-->
 <view class="container {{open ? 'c-state3' : ''}}">
-  <view class="item" wx:for="{{list}}" wx:key="wxKey" id="{{item.id}}" bindtap="bind_view_tap">
+  <view class="item" wx:for="{{list}}" id="{{item.id}}" bindtap="bind_view_tap">
     <view class="text">
       <view class="b1">
         <view class="cid">{{item.id}}</view>
-        <view wx:if="{{item.admin == 1}}" class="xuankuhongming">{{item.userid}}</view>
-        <view wx:else class="uid">{{item.userid}}</view>
+        <view class="{{item.admin == 1?'xuankuhongming':''}}">{{item.userid}}</view>
         <view class="stime">{{item.now}}</view>
       </view>
       
       <view class="b2">
-        <view class="title">{{item.title}}</view>
-        <view class="uname">{{item.name}}</view>
+        <view class="title" wx:if="{{item.title!='无标题'}}" >{{item.title}}</view>
+        <view class="uname" wx:if="{{item.name!='无名氏'}}" >{{item.name}}</view>
       </view>
       <template is="wxParse" data="{{wxParseData:item.html.nodes}}"/>
     </view>
-    <image hidden="{{!item.img}}" class="img" src="{{item.thumburl}}{{item.img}}" mode="aspectFit" bindtap="bind_pic_tap" id="{{item.img}}"></image>
+    <view style="width:100%;"><!--不加这一层可能导致点击图片周围空白区域无法触发tap-->
+    <image wx:if="{{item.img!=''}}" class="img" src="{{item.thumburl}}{{item.img}}" mode="aspectFit" bindtap="bind_pic_tap" id="{{item.img}}"></image>
+    </view>
     <view class="b1">
         <view class="readcount">回应：{{item.replyCount}}</view>
         <view class="sage" hidden="{{item.sage==0?true:false}}">SAGE</view>
     </view>
-
     <view class="v_hr"></view>
   </view>
-
-  <view class="footer">
-    <image bindtap="tap_ch" mode="aspectFit" class="icons" src="../../icons/menu.png"></image>
-    <image bindtap="tap_sl" mode="aspectFit" class="icons" src="../../icons/goto.png"></image>
-    <image bindtap="tap_nw" mode="aspectFit" class="icons" src="../../icons/new.png"></image>
-  </view>
 </view>
-
-
+<!--底部导航-->
+<view class="footer {{open ? 'c-state2' : ''}}">
+  <image bindtap="tap_ch" mode="aspectFit" class="icons" src="../../icons/menu.png"></image>
+  <image bindtap="tap_sl" mode="aspectFit" class="icons" src="../../icons/goto.png"></image>
+  <image bindtap="tap_nw" mode="aspectFit" class="icons" src="../../icons/new.png"></image>
+</view>
 
 <view class="body-view">
   <loading hidden="{{hidden}}" bindchange="loadingChange">

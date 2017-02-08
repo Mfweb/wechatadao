@@ -1,15 +1,17 @@
 var WxParse = require('../../wxParse/wxParse.js');
-var url = "https://h.nimingban.com/Api/thread";
 var page = 1;
 var page_id = 0;
-
+var last_length = 0;
+var appInstance = getApp();
+var pw_run = false;//防止下拉刷新清空列表的时候触发上拉加载
 //获取数据
 var GetList = function(that)
 {
   that.setData({hidden:false});
+  console.log("start");
   wx.request(
   {
-    url:url,
+    url:appInstance.globalData.thread_url,
     data:
     {
       id : page_id,
@@ -17,14 +19,13 @@ var GetList = function(that)
     },
     header:
     {
-      //'User-Agent' : 'HavfunClient-WeChatAPP',//好像不允许修改
-      'content-type' : 'application/json'
+      'User-Agent' : 'HavfunClient-WeChatAPP',
+      'content-type' : 'application/json',
+      'X-Requested-With':'XMLHttpRequest'
     },
 
     success:function(res)
     {
-      //console.log(res);
-      var appInstance = getApp();
       var list = that.data.list;
       if(page ==1 && list.length == 0)//第一页 添加正文内容
       {
@@ -38,7 +39,8 @@ var GetList = function(that)
           'html':WxParse.wxParse('item', 'html', res.data.content, that,5),
           'admin':res.data.admin,
           'replyCount':res.data.replyCount,
-          'sage':res.data.sage
+          'sage':res.data.sage,
+          'admin':res.data.admin
           };
           if(res.data.img!="")
           {
@@ -55,11 +57,19 @@ var GetList = function(that)
             title: list[0].title,
             success: function(res) {}
           });
-        }
-
-      if(res.data.replys.length > 0)//本次拉取的数量大于0就push
+      }
+      var len = 0;
+      if(last_length > 0)
       {
-        for(let i = 0; i < res.data.replys.length; i++)
+        len = res.data.replys.length - last_length;
+      }
+      else
+      {
+        len = res.data.replys.length;
+      }
+      if(len > 0)//本次拉取的数量大于0就push
+      {
+        for(let i =last_length; i < res.data.replys.length; i++)
         {
           if(res.data.replys[i].img != "")
           {
@@ -71,7 +81,17 @@ var GetList = function(that)
           list.push(res.data.replys[i]);
         }
         that.setData({list : list});
-        page ++;
+
+        //console.log(res.data.replys.length + "  " + list.length + "  " +page);
+        if(res.data.replys.length == 19)//本页已经完
+        {
+          page ++;
+          last_length = 0;
+        }
+        else//本页还没满，下次要再拉取
+        {
+          last_length = res.data.replys.length;
+        }
       }
       else//本次没有拉取到
       {
@@ -83,9 +103,9 @@ var GetList = function(that)
           title: '没有更多了',
           icon: 'success',
           duration: 500
-        })
+        });
       }
-      //console.log(list);
+      //console.log(list.length);
       that.setData({hidden:true});
     },
     fail:function()
@@ -95,7 +115,11 @@ var GetList = function(that)
           title: '加载失败',
           icon: 'success',
           duration: 500
-        })
+        });
+    },
+    complete:function()
+    {
+      pw_run = false;
     }
   });
 }
@@ -113,13 +137,7 @@ Page({
   {
     page_id = e.id;
     page = 1;
-    this.data.list.splice(0,this.data.list.length);
-    wx.getSystemInfo(
-      {
-      success:function(res)
-      {
-      }
-    });
+    last_length = 0;
     var that = this;
     GetList(that);
   },
@@ -136,32 +154,35 @@ Page({
 
   onPullDownRefresh: function()//下拉刷新
   {
+    pw_run = true;
     page = 1;
-    this.data.list.splice(0,this.data.list.length);
+    last_length = 0;
     this.setData(
     {
       list : [],
       scrollTop : 0
     });
-    GetList(this)
-    wx.stopPullDownRefresh()
+    var that = this;
+    GetList(that);
+    wx.stopPullDownRefresh();
   },
 
   onReachBottom: function ()//上拉加载更多
   {
+    if(pw_run)return;
     var that = this;
     GetList(that);
   },
   bind_pic_tap: function(e)//单击图片
   {
-    var appInstance = getApp();
     var pr_imgs = [appInstance.globalData.full_img_url + e['currentTarget'].id];
     wx.previewImage({
       current: appInstance.globalData.thumb_img_url + e['currentTarget'].id,
       urls:pr_imgs
     })
-    //console.log(e);//currentTarget
-    //console.log(e);
-    //wx.navigateTo({url: '../picview/picview?id=' + e['currentTarget'].id});
   },
+  tap_nw : function()//回复本串
+  {
+    wx.navigateTo({url: '../new/new?mode=2&revid=' + page_id});
+  }
 })

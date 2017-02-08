@@ -2,6 +2,11 @@
 App({
   globalData:{
     thumb_img_url:"http://cdn.ovear.info:9009/thumb/",
-    full_img_url:"http://cdn.ovear.info:9009/image/"
+    full_img_url:"http://cdn.ovear.info:9009/image/",
+    show_forum_url:"https://h.nimingban.com/Api/showf?appid=wechatapp",
+    get_forum_url:"https://h.nimingban.com/Api/getForumList?appid=wechatapp",
+    thread_url:"https://h.nimingban.com/Api/thread?appid=wechatapp",
+    new_thread_url:"https://h.nimingban.com/Home/Forum/doPostThread.html",
+    new_reply_url:"https://h.nimingban.com/Home/Forum/doReplyThread.html?appid=wechatapp"
   }
 })

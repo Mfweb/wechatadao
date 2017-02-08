@@ -115,9 +115,10 @@ function HTMLParser(html, handler)
 		if (html == last)
 		{
 			console.log(last +"   " + html);
-			html = "";//不继续下去了了  如果有颜文字这里可能死循环掉
+			html = html.substr(1);//这样会去掉一个字符，但是保证整个字符串可完整显示，暂时没有好办法
 			//throw "Parse Error: " + html;
 		}
+		
 		last = html;
 	}
 	//last = "";
