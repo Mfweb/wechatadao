@@ -16,7 +16,9 @@
       <template is="wxParse" data="{{wxParseData:item.html.nodes}}"/>
     </view>
 
-    <image hidden="{{!item.img}}" class="img" src="{{item.thumburl}}{{item.img}}" mode="aspectFit" bindtap="bind_pic_tap" id = "{{item.img}}"></image>
+    <view style="width:100%;"><!--不加这一层可能导致点击图片周围空白区域无法触发tap-->
+      <image wx:if="{{item.img!=''}}" style="height:{{item.img_height}}px;width:{{item.img_width}}px;" id="{{index}}" class="img" src="{{item.thumburl}}{{item.img}}" mode="aspectFit" bindtap="bind_pic_tap" bindload="bind_pic_load"></image>
+    </view>
     <view class="b1" wx:if="{{index==0}}">
       <view class="readcount">回应：{{item.replyCount}}</view>
       <view class="sage" hidden="{{item.sage==0?true:false}}">SAGE</view>

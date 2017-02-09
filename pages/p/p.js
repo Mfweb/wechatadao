@@ -4,11 +4,13 @@ var page_id = 0;
 var last_length = 0;
 var appInstance = getApp();
 var pw_run = false;//防止下拉刷新清空列表的时候触发上拉加载
+var sys_height = 0;
+var sys_width  = 0;
 //获取数据
 var GetList = function(that)
 {
   that.setData({hidden:false});
-  console.log("start");
+  //console.log("start");
   wx.request(
   {
     url:appInstance.globalData.thread_url,
@@ -40,7 +42,9 @@ var GetList = function(that)
           'admin':res.data.admin,
           'replyCount':res.data.replyCount,
           'sage':res.data.sage,
-          'admin':res.data.admin
+          'admin':res.data.admin,
+          'img_height':0,
+          'img_width':0
           };
           if(res.data.img!="")
           {
@@ -135,6 +139,9 @@ Page({
  
   onLoad:function(e)
   {
+    var res = wx.getSystemInfoSync();
+    sys_width  = res.windowWidth;
+    sys_height = res.windowHeight;
     page_id = e.id;
     page = 1;
     last_length = 0;
@@ -175,11 +182,28 @@ Page({
   },
   bind_pic_tap: function(e)//单击图片
   {
-    var pr_imgs = [appInstance.globalData.full_img_url + e['currentTarget'].id];
+    var pr_imgs = [appInstance.globalData.full_img_url + this.data.list[e['currentTarget'].id].img];
     wx.previewImage({
-      current: appInstance.globalData.thumb_img_url + e['currentTarget'].id,
+      current: appInstance.globalData.thumb_img_url + this.data.list[e['currentTarget'].id].img,
       urls:pr_imgs
     })
+  },
+  bind_pic_load: function(e)
+  {
+    var list = this.data.list;
+    var temp_width = 0;
+    var temp_height = 0;
+    var temp_ratio = 0.0;
+    temp_width = sys_width/2;//要缩放到的图片宽度
+    temp_ratio = temp_width/e.detail.width;//计算缩放比例
+    temp_height = e.detail.height*temp_ratio;//计算缩放后的高度
+    list[e.target.id].img_height = parseInt(temp_height);
+    list[e.target.id].img_width  = parseInt(temp_width);
+    this.setData({list:list});
+    //console.log(list[e.target.id].img_height + "  " + list[e.target.id].img_width);
+    //detail
+    //console.log(e);
+    //this.setData({list[e.detail.id].img_height:e.detail.height});
   },
   tap_nw : function()//回复本串
   {

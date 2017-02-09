@@ -6,7 +6,7 @@ App({
     show_forum_url:"https://h.nimingban.com/Api/showf?appid=wechatapp",
     get_forum_url:"https://h.nimingban.com/Api/getForumList?appid=wechatapp",
     thread_url:"https://h.nimingban.com/Api/thread?appid=wechatapp",
-    new_thread_url:"https://h.nimingban.com/Home/Forum/doPostThread.html",
+    new_thread_url:"https://h.nimingban.com/Home/Forum/doPostThread.html?appid=wechatapp",
     new_reply_url:"https://h.nimingban.com/Home/Forum/doReplyThread.html?appid=wechatapp"
   }
 })
