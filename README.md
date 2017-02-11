@@ -15,3 +15,5 @@ https://github.com/icindy/wxParse
 ![4](https://github.com/Mfweb/wechatadao/raw/master/screenshot/4.png)
 
 ![5](https://github.com/Mfweb/wechatadao/raw/master/screenshot/5.png)
+
+![6](https://github.com/Mfweb/wechatadao/raw/master/screenshot/6.png)
