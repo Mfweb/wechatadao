@@ -1,1 +1,24 @@
 /* pages/cookie_manager/cookie_manager.wxss */
+
+.cookielist{
+    width: 90%;
+    font-size: 15px;
+}
+
+.cookieiteam{
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+}
+
+.enablecookie{
+    background-color: #98F5FF;
+}
+
+.noenablecookie{
+
+}
+
+.ck_icon{
+    margin-top: 2px;
+}

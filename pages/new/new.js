@@ -79,10 +79,11 @@ var SendReplyNoImg = function(that,resto,content)
       }
       else
       {
+        console.log(res);
         wx.showToast({
           title: res.data.info,
           icon: 'success',
-          duration: 1500
+          duration: 2000
         });
       }
     },
@@ -90,7 +91,7 @@ var SendReplyNoImg = function(that,resto,content)
       wx.showToast({
           title: '发送失败',
           icon: 'success',
-          duration: 1500
+          duration: 2000
         });
       console.log(res);
     }
@@ -150,7 +151,7 @@ var SendReply = function(that,resto,content,file,water)
         wx.showToast({
           title: res.data.info,
           icon: 'success',
-          duration: 1500
+          duration: 2000
         });
       }
     },
@@ -158,7 +159,7 @@ var SendReply = function(that,resto,content,file,water)
         wx.showToast({
           title: '发送失败',
           icon: 'success',
-          duration: 1500
+          duration: 2000
         });
       console.log(res);
     }

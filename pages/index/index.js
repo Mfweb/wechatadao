@@ -301,5 +301,9 @@ Page(
   tap_nw : function()//发新串
   {
     wx.navigateTo({url: '../new/new?mode=1&revid=' + page_id});
+  },
+  tap_ma: function()
+  {
+    wx.navigateTo({url: '../cookie_manager/cookie_manager'});
   }
 })
