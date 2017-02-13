@@ -128,3 +128,12 @@
   margin: 2px 2px 2px 10px;
   font-size: 20px;
 }
+.list_bot{
+    width: 100%;
+    background: #F5F5F5;
+    height: 45px;
+    font-size: 15px;
+    margin: 0 auto;
+    text-align: center;
+    color: #00ccff;
+}

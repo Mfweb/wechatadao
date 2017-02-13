@@ -25,7 +25,7 @@ var GetTitle = function(that)
 //获取板块内串
 var GetList = function(that)
 {
-  that.setData({hidden:false});
+  that.setData({bot_text:"正在加载.."});
   wx.request(
   {
     url:appInstance.globalData.show_forum_url,
@@ -43,7 +43,6 @@ var GetList = function(that)
 
     success:function(res)
     {
-
       var list = that.data.list;
       if(res.data.length > 0)
       {
@@ -62,17 +61,15 @@ var GetList = function(that)
         that.setData({list : list});
         page ++;
       }
-
-      that.setData({hidden:true});
+      that.setData({bot_text:list.length+",上拉继续加载.."});
     },
 
     fail:function()
     {
-      that.setData({hidden:true});
         wx.showToast({
           title: '加载失败',
           icon: 'success',
-          duration: 500
+          duration: 1500
         })
     },
     complete:function()
@@ -86,7 +83,6 @@ var GetList = function(that)
 //获取板块列表
 var GetFList = function(that)
 {
-  that.setData({hidden:false});
   wx.request(
   {
     url:appInstance.globalData.get_forum_url,
@@ -100,23 +96,26 @@ var GetFList = function(that)
 
     success:function(res)
     {
-
       var list_temp = [];//板块列表
-
       if(res.data.length > 0)
       {
         for(let i = 0; i < res.data.length; i++)
         {
+          let temp = res.data[i].forums;
+          for(let j=0;j<temp.length;j++)
+          {
+            temp[j].showNameHtml = temp[j].showName;
+            temp[j].showName = WxParse.wxParse('item', 'html', temp[j].showName, that,5);
+          }
+          res.data[i].forums = temp;
           list_temp.push(res.data[i]);
         }
         that.setData({flist : list_temp});
       }
-      that.setData({hidden:true,f_image:"http://cover.acfunwiki.org/cover.php"});
     },
 
     fail:function()
     {
-      that.setData({hidden:true});
         wx.showToast({
           title: '板块列表加载失败',
           icon: 'success',
@@ -126,6 +125,23 @@ var GetFList = function(that)
   });
 }
 
+var GetMainPicture = function(that)
+{
+  wx.request({
+    url: 'https://mfweb.top/adao/getpicture.php',
+    data: {},
+    method: 'GET',
+    success: function(res)
+    {
+      if(res.data!="error")
+      {
+        that.setData({f_image:res.data});
+      }
+    },
+    fail: function() {
+    }
+  });
+}
 var refGet = function(that)
 {
   page = 1;
@@ -143,13 +159,13 @@ Page(
 {
   data:
   {
-    hidden:true,//显示隐藏正在加载
     list:[],//主列表
     flist:[],//板块列表
     open : false,//显示板块列表
     modalFlag:true,//显示跳转页面
     default_page:1,//跳转页面默认值
     f_image:"",//首页图片
+    bot_text:"",
   },
   
   onLoad:function()
@@ -159,6 +175,7 @@ Page(
     sys_height = res.windowHeight;
     var that = this;
     GetFList(that);
+    GetMainPicture(that);
     var select_n = wx.getStorageSync('SelectForumName');
     if(select_n != "")
       wx.setNavigationBarTitle({title: select_n});
@@ -262,7 +279,6 @@ Page(
     {
       page = page_in;
       var that = this;
-      this.data.list.splice(0,this.data.list.length);
       this.setData(
       {
         list : [],
@@ -305,5 +321,13 @@ Page(
   tap_ma: function()
   {
     wx.navigateTo({url: '../cookie_manager/cookie_manager'});
+  },
+  max_picture : function(res)
+  {
+    var pr_imgs = [res.currentTarget.id];
+    wx.previewImage({
+      current: res.currentTarget.id,
+      urls:pr_imgs
+    })
   }
 })

@@ -1,6 +1,7 @@
 var WxParse = require('../../wxParse/wxParse.js');
 var page = 1;
 var page_id = 0;
+var page_in = -1;
 var last_length = 0;
 var appInstance = getApp();
 var pw_run = false;//防止下拉刷新清空列表的时候触发上拉加载
@@ -9,8 +10,11 @@ var sys_width  = 0;
 //获取数据
 var GetList = function(that)
 {
-  that.setData({hidden:false});
   //console.log("start");
+  if(page == 1)
+    that.setData({bot_text:that.data.bot_text + "\nLoading..."});
+  else
+    that.setData({bot_text:"Loading..."});
   wx.request(
   {
     url:appInstance.globalData.thread_url,
@@ -29,7 +33,7 @@ var GetList = function(that)
     success:function(res)
     {
       var list = that.data.list;
-      if(page ==1 && list.length == 0)//第一页 添加正文内容
+      if(list.length == 0)//第一页 添加正文内容
       {
         var header = {
           'id':res.data.id,
@@ -62,6 +66,7 @@ var GetList = function(that)
             success: function(res) {}
           });
       }
+      
       var len = 0;
       if(last_length > 0)
       {
@@ -73,6 +78,7 @@ var GetList = function(that)
       }
       if(len > 0)//本次拉取的数量大于0就push
       {
+        list[0].replyCount = res.data.replyCount;
         for(let i =last_length; i < res.data.replys.length; i++)
         {
           if(res.data.replys[i].img != "")
@@ -103,18 +109,13 @@ var GetList = function(that)
         {
           that.setData({list : list});
         }
-        wx.showToast({
-          title: '没有更多了',
-          icon: 'success',
-          duration: 500
-        });
       }
       //console.log(list.length);
-      that.setData({hidden:true});
+      that.setData({bot_text:(list.length-1) + "/" + list[0].replyCount});
     },
     fail:function()
     {
-      that.setData({hidden:true});
+      that.setData({bot_text:"error"});
         wx.showToast({
           title: '加载失败',
           icon: 'success',
@@ -131,10 +132,12 @@ var GetList = function(that)
 Page({
  data:
  {
-  hidden:true,
   list:[],
   scrollTop : 0,
-  scrollHeight:0
+  scrollHeight:0,
+  bot_text:"",
+  modalFlag:true,//显示跳转页面
+  default_page:1,//跳转页面默认值
  },
  
   onLoad:function(e)
@@ -208,5 +211,52 @@ Page({
   tap_nw : function()//回复本串
   {
     wx.navigateTo({url: '../new/new?mode=2&revid=' + page_id});
-  }
+  },
+  tap_sl: function()
+  {
+    page_in = 1;
+    this.setData({modalFlag:false,default_page:1});
+  },
+  modalOk: function(e)//设置好了跳转到某一页回来
+  {  
+    this.setData({modalFlag:true});
+    if(page_in<=0)
+    {
+      wx.showModal(
+        {
+          title:"输入有误！",
+          content:"页码应当大于0",
+          showCancel:false
+        }
+      );
+    }
+    else
+    {
+      page = page_in;
+      var that = this;
+      this.setData(
+      {
+        list : [],
+        scrollTop : 0
+      });
+      GetList(that);
+    }
+  },
+  modalCancel: function(e)//点击了取消
+  {  
+    this.setData({modalFlag:true});
+  },
+  page_input: function(e)
+  {
+    var temp = parseInt(e['detail'].value);
+    if(e['detail'].value!="")
+    {
+      if(isNaN(temp))temp=1;
+      page_in = temp;
+      return parseInt(page_in);
+    }
+    else
+      page_in = -1;
+  },
+
 })

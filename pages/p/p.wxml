@@ -1,6 +1,10 @@
 <!--index.wxml-->
 <import src="../../wxParse/wxParse.wxml"/>
-
+<!--跳转到某一页-->
+<modal title="输入要跳转的页数" hidden="{{modalFlag}}" bindconfirm="modalOk" bindcancel="modalCancel" confirm-text="确定" cancel-text="取消">
+<input class="input_cs" type="number" value="{{default_page}}" bindinput="page_input" />
+</modal>
+<!--列表-->
 <view class="container">
   <view class="item" wx:for="{{list}}" wx:key="wxKey" id="{{item.id}}" bindtap="bind_view_tap">
     <view class="text">
@@ -26,18 +30,14 @@
 
     <view class="v_hr"></view>
   </view>
-  <view class="list_bot"></view>
-</view>
-
-<view class="body-view">
-  <loading hidden="{{hidden}}" bindchange="loadingChange">
-      加载中...
-  </loading>
+  <view class="list_bot">
+    {{bot_text}}
+  </view>
 </view>
 
 <view class="footer">
   <image bindtap="" mode="aspectFit" class="icons" src="../../icons/110.png"></image>
   <image bindtap="" mode="aspectFit" class="icons" src="../../icons/star.png"></image>
-  <image bindtap="" mode="aspectFit" class="icons" src="../../icons/goto.png"></image>
+  <image bindtap="tap_sl" mode="aspectFit" class="icons" src="../../icons/goto.png"></image>
   <image bindtap="tap_nw" mode="aspectFit" class="icons" src="../../icons/new.png"></image>
 </view>
