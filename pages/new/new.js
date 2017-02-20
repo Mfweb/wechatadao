@@ -53,6 +53,7 @@ var SendReplyNoImg = function(that,resto,content)
     });
     return;
   }
+  that.setData({UploadDisable:true,hidden:false});
   wx.request({
     url: re_mode==1?appInstance.globalData.new_thread_url:appInstance.globalData.new_reply_url,
     data: {
@@ -94,6 +95,9 @@ var SendReplyNoImg = function(that,resto,content)
           duration: 2000
         });
       console.log(res);
+    },
+    complete:function(){
+      that.setData({UploadDisable:false,hidden:true});
     }
   });
 }
@@ -118,6 +122,7 @@ var SendReply = function(that,resto,content,file,water)
     });
     return;
   }
+  that.setData({UploadDisable:true,hidden:false});
   wx.uploadFile({
     url: re_mode==1?'https://h.nimingban.com/Home/Forum/doPostThread.html':'https://h.nimingban.com/Home/Forum/doReplyThread.html?appid=wechatapp',
     filePath:file,
@@ -162,6 +167,9 @@ var SendReply = function(that,resto,content,file,water)
           duration: 2000
         });
       console.log(res);
+    },
+    complete:function(){
+      that.setData({UploadDisable:false,hidden:true});
     }
   })
 }
@@ -174,7 +182,8 @@ Page({
       select_image:"",
       select_image_hid:true,
       watermark:"false",
-      hidden:true
+      hidden:true,
+      UploadDisable:false
     },
     onLoad:function(e)
     {

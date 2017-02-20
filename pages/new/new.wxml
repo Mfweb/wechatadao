@@ -12,7 +12,7 @@
                 <image bindtap="cl_tp" mode="aspectFit" class="sicons" src="../../icons/clear.png"></image>
             </view>
             
-            <button class="post_rev" type="primary" form-type="submit" bindtap="onSubmit">提交</button>
+            <button class="post_rev" type="primary" form-type="submit" bindtap="onSubmit" disabled="{{UploadDisable}}">提交</button>
             <button class="post_rev" type="warn" form-type="reset" bindtap="onCancel">取消</button>
         </form>
     </view>
