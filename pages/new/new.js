@@ -178,13 +178,16 @@ Page({
     },
     onLoad:function(e)
     {
-        if(e.mode==1)
+        if(e.mode==1)//发新串
         {
             wx.setNavigationBarTitle({title: '发新串'});
         }
-        else if(e.mode==2)
+        else if(e.mode==2)//回复某个串
         {
             wx.setNavigationBarTitle({title: '回复>>No.' + e.revid});
+            if(e.rev_text!="" && e.rev_text!=undefined && e.rev_text!=null)
+              this.setData({txt_value:e.rev_text});
+            //wx.setStorageSync('String', Object/String)
         }
         resto_id = e.revid;
         re_mode  = e.mode;

@@ -6,6 +6,7 @@ var appInstance = getApp();
 var pw_run = false;//防止下拉刷新清空列表的时候触发上拉加载
 var sys_height = 0;
 var sys_width  = 0;
+var post_run = false;
 //修改标题为当前板块
 var GetTitle = function(that)
 {
@@ -25,6 +26,8 @@ var GetTitle = function(that)
 //获取板块内串
 var GetList = function(that)
 {
+  if(post_run)return;
+  post_run = true;
   that.setData({bot_text:"正在加载.."});
   wx.request(
   {
@@ -75,6 +78,7 @@ var GetList = function(that)
     complete:function()
     {
       pw_run = false;
+      post_run = false;
     }
   });
 }

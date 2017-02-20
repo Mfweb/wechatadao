@@ -1,16 +1,20 @@
 var WxParse = require('../../wxParse/wxParse.js');
-var page = 1;
-var page_id = 0;
-var page_in = -1;
+var page = 1;//当前页数
+var page_id = 0;//串ID
+var page_in = -1;//输入要跳转的页面
 var last_length = 0;
 var appInstance = getApp();
 var pw_run = false;//防止下拉刷新清空列表的时候触发上拉加载
-var sys_height = 0;
+var sys_height = 0;//系统屏幕尺寸
 var sys_width  = 0;
+var post_run = false;//防止重复拉取
+var LongTapID = "";//长按选择的ID
 //获取数据
 var GetList = function(that)
 {
   //console.log("start");
+  if(post_run)return;
+  post_run = true;
   if(page == 1)
     that.setData({bot_text:that.data.bot_text + "\nLoading..."});
   else
@@ -125,6 +129,7 @@ var GetList = function(that)
     complete:function()
     {
       pw_run = false;
+      post_run = false;
     }
   });
 }
@@ -138,6 +143,7 @@ Page({
   bot_text:"",
   modalFlag:true,//显示跳转页面
   default_page:1,//跳转页面默认值
+  ShowMenu:true
  },
  
   onLoad:function(e)
@@ -161,7 +167,35 @@ Page({
   {
 
   },
+  bind_view_long_tap:function(e)//长按
+  {
+    LongTapID = e.currentTarget.id;
+    this.setData({ShowMenu:false});
+  },
+  MenuChange:function(e)//关闭下部菜单
+  {
+    this.setData({ShowMenu:true});
+  },
+  th_reply:function(e)//回复指定No.
+  {
+    wx.navigateTo({url: '../new/new?mode=2&revid=' + page_id + "&rev_text=>>No." + LongTapID + "\n"});
+    LongTapID = "";
+    this.setData({ShowMenu:true});
+  },
+  add_reply_list:function(e)//添加到回复列表
+  {
+    if(LongTapID!="")
+    {
+      var temp = wx.getStorageSync('ReplyIDList');
+      temp += ">>No." + LongTapID + "\n";
+      wx.setStorageSync('ReplyIDList', temp);
+      this.setData({ShowMenu:true});
+    }
+  },
+  th_report:function(e)//举报这个No.
+  {
 
+  },
   onPullDownRefresh: function()//下拉刷新
   {
     pw_run = true;
@@ -191,7 +225,7 @@ Page({
       urls:pr_imgs
     })
   },
-  bind_pic_load: function(e)
+  bind_pic_load: function(e)//图片载入完成
   {
     var list = this.data.list;
     var temp_width = 0;
@@ -210,7 +244,10 @@ Page({
   },
   tap_nw : function()//回复本串
   {
-    wx.navigateTo({url: '../new/new?mode=2&revid=' + page_id});
+    var temp = wx.getStorageSync('ReplyIDList');
+    if(temp!="")
+      wx.setStorageSync('ReplyIDList', "")
+    wx.navigateTo({url: '../new/new?mode=2&revid=' + page_id + "&rev_text="+temp});
   },
   tap_sl: function()
   {
@@ -246,7 +283,7 @@ Page({
   {  
     this.setData({modalFlag:true});
   },
-  page_input: function(e)
+  page_input: function(e)//输入要跳转的页面
   {
     var temp = parseInt(e['detail'].value);
     if(e['detail'].value!="")

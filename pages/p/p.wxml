@@ -6,10 +6,10 @@
 </modal>
 <!--列表-->
 <view class="container">
-  <view class="item" wx:for="{{list}}" wx:key="wxKey" id="{{item.id}}" bindtap="bind_view_tap">
+  <view class="item" wx:for="{{list}}" wx:key="wxKey" id="{{item.id}}" bindtap="bind_view_tap" bindlongtap="bind_view_long_tap">
     <view class="text">
       <view class="b1">
-        <view class="cid">{{item.id}}</view>
+        <view class="cid">No.{{item.id}}</view>
         <view class="uid {{list[0].userid==item.userid?'po':''}} {{item.admin == 1?'xuankuhongming':''}}">{{item.userid}}</view>
         <view class="stime">{{item.now}}</view>
       </view>
@@ -34,6 +34,15 @@
     {{bot_text}}
   </view>
 </view>
+
+<action-sheet hidden="{{ShowMenu}}" bindchange="MenuChange">
+    <block>
+        <action-sheet-item bindtap="th_reply">回复</action-sheet-item>
+        <action-sheet-item bindtap="add_reply_list">添加到回复引用列表</action-sheet-item>
+        <action-sheet-item bindtap="th_report">举报</action-sheet-item>
+    </block>
+    <action-sheet-cancel>取消</action-sheet-cancel>
+</action-sheet>
 
 <view class="footer">
   <image bindtap="" mode="aspectFit" class="icons" src="../../icons/110.png"></image>

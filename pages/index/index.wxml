@@ -27,7 +27,7 @@
   <view class="item" wx:for="{{list}}" id="{{item.id}}" bindtap="bind_view_tap">
     <view class="text">
       <view class="b1">
-        <view class="cid">{{item.id}}</view>
+        <view class="cid">No.{{item.id}}</view>
         <view class="{{item.admin == 1?'xuankuhongming':''}}">{{item.userid}}</view>
         <view class="stime">{{item.now}}</view>
       </view>

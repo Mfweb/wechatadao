@@ -1,12 +1,13 @@
 //app.js
 App({
   globalData:{
-    thumb_img_url:"http://cdn.ovear.info:9009/thumb/",
-    full_img_url:"http://cdn.ovear.info:9009/image/",
-    show_forum_url:"https://h.nimingban.com/Api/showf?appid=wechatapp",
-    get_forum_url:"https://h.nimingban.com/Api/getForumList?appid=wechatapp",
-    thread_url:"https://h.nimingban.com/Api/thread?appid=wechatapp",
-    new_thread_url:"https://h.nimingban.com/Home/Forum/doPostThread.html?appid=wechatapp",
-    new_reply_url:"https://h.nimingban.com/Home/Forum/doReplyThread.html?appid=wechatapp"
+    thumb_img_url:"http://cdn.ovear.info:9009/thumb/",//缩略图
+    full_img_url:"http://cdn.ovear.info:9009/image/",//原图
+    show_forum_url:"https://h.nimingban.com/Api/showf?appid=wechatapp",//获得板块内串
+    get_forum_url:"https://h.nimingban.com/Api/getForumList?appid=wechatapp",//获得板块列表
+    thread_url:"https://h.nimingban.com/Api/thread?appid=wechatapp",//获得串回复列表
+    new_thread_url:"https://h.nimingban.com/Home/Forum/doPostThread.html?appid=wechatapp",//发送新串
+    new_reply_url:"https://h.nimingban.com/Home/Forum/doReplyThread.html?appid=wechatapp",//发送新回复
+    get_thread_url:"https://h.nimingban.com/Api/ref?appid=wechatapp"//获得串内容
   }
 })
