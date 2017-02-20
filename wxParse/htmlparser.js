@@ -1,4 +1,7 @@
 /**
+ * 
+ * htmlParser改造自: https://github.com/blowsie/Pure-JavaScript-HTML5-Parser
+ * 
  * author: Di (微信小程序开发工程师)
  * organization: WeAppDev(微信小程序开发论坛)(http://weappdev.com)
  *               垂直微信小程序开发交流社区
@@ -32,27 +35,23 @@ var fillAttrs = makeMap("checked,compact,declare,defer,disabled,ismap,multiple,n
 // Special Elements (can contain anything)
 var special = makeMap("wxxxcode-style,script,style,view,scroll-view,block");
 
-function HTMLParser(html, handler)
-{
+function HTMLParser(html, handler) {
 	var index, chars, match, stack = [], last = html;
-	stack.last = function ()
-	{
+	stack.last = function () {
 		return this[this.length - 1];
 	};
 
-	while (html)
-	{
+	while (html) {
 		chars = true;
+
 		// Make sure we're not in a script or style element
-		if (!stack.last() || !special[stack.last()])
-		{
+		if (!stack.last() || !special[stack.last()]) {
+
 			// Comment
-			if (html.indexOf("<!--") == 0)
-			{
+			if (html.indexOf("<!--") == 0) {
 				index = html.indexOf("-->");
 
-				if (index >= 0)
-				{
+				if (index >= 0) {
 					if (handler.comment)
 						handler.comment(html.substring(4, index));
 					html = html.substring(index + 3);
@@ -60,84 +59,73 @@ function HTMLParser(html, handler)
 				}
 
 				// end tag
-			}
-			else if (html.indexOf("</") == 0)
-			{
+			} else if (html.indexOf("</") == 0) {
 				match = html.match(endTag);
 
-				if (match)
-				{
+				if (match) {
 					html = html.substring(match[0].length);
 					match[0].replace(endTag, parseEndTag);
 					chars = false;
 				}
 
 				// start tag
-			}
-			else if (html.indexOf("<") == 0)
-			{
+			} else if (html.indexOf("<") == 0) {
 				match = html.match(startTag);
 
-				if (match)
-				{
+				if (match) {
 					html = html.substring(match[0].length);
 					match[0].replace(startTag, parseStartTag);
 					chars = false;
 				}
 			}
-			
-			if (chars)
-			{
-				index = html.indexOf("<");
 
-				var text = index < 0 ? html : html.substring(0, index);
+			if (chars) {
+				index = html.indexOf("<");
+				var text = ''
+				while (index === 0) {
+                                  text += "<";
+                                  html = html.substring(1);
+                                  index = html.indexOf("<");
+				}
+				text += index < 0 ? html : html.substring(0, index);
 				html = index < 0 ? "" : html.substring(index);
 
 				if (handler.chars)
 					handler.chars(text);
 			}
 
-		}
-		else
-		{
+		} else {
 
-			html = html.replace(new RegExp("([\\s\\S]*?)<\/" + stack.last() + "[^>]*>"),
-			function (all, text)
-			{
+			html = html.replace(new RegExp("([\\s\\S]*?)<\/" + stack.last() + "[^>]*>"), function (all, text) {
 				text = text.replace(/<!--([\s\S]*?)-->|<!\[CDATA\[([\s\S]*?)]]>/g, "$1$2");
 				if (handler.chars)
 					handler.chars(text);
+
 				return "";
 			});
+
+
 			parseEndTag("", stack.last());
 		}
 
 		if (html == last)
-		{
-			console.log(last +"   " + html);
-			html = html.substr(1);//这样会去掉一个字符，但是保证整个字符串可完整显示，暂时没有好办法
-			//throw "Parse Error: " + html;
-		}
-		
+			throw "Parse Error: " + html;
 		last = html;
 	}
-	//last = "";
+
 	// Clean up any remaining tags
 	parseEndTag();
-	function parseStartTag(tag, tagName, rest, unary)
-	{
+
+	function parseStartTag(tag, tagName, rest, unary) {
 		tagName = tagName.toLowerCase();
 
-		if (block[tagName])
-		{
-			while (stack.last() && inline[stack.last()])
-			{
+		if (block[tagName]) {
+			while (stack.last() && inline[stack.last()]) {
 				parseEndTag("", stack.last());
 			}
 		}
 
-		if (closeSelf[tagName] && stack.last() == tagName)
-		{
+		if (closeSelf[tagName] && stack.last() == tagName) {
 			parseEndTag("", tagName);
 		}
 
@@ -146,12 +134,10 @@ function HTMLParser(html, handler)
 		if (!unary)
 			stack.push(tagName);
 
-		if (handler.start)
-		{
+		if (handler.start) {
 			var attrs = [];
 
-			rest.replace(attr, function (match, name)
-			{
+			rest.replace(attr, function (match, name) {
 				var value = arguments[2] ? arguments[2] :
 					arguments[3] ? arguments[3] :
 						arguments[4] ? arguments[4] :
@@ -164,28 +150,26 @@ function HTMLParser(html, handler)
 				});
 			});
 
-			if (handler.start)
-			{
+			if (handler.start) {
 				handler.start(tagName, attrs, unary);
 			}
 
 		}
 	}
 
-	function parseEndTag(tag, tagName)
-	{
+	function parseEndTag(tag, tagName) {
 		// If no tag name is provided, clean shop
 		if (!tagName)
 			var pos = 0;
 
 		// Find the closest opened tag of the same type
-		else
+		else {
+			tagName = tagName.toLowerCase();
 			for (var pos = stack.length - 1; pos >= 0; pos--)
 				if (stack[pos] == tagName)
 					break;
-
-		if (pos >= 0)
-		{
+		}
+		if (pos >= 0) {
 			// Close all the open elements, up the stack
 			for (var i = stack.length - 1; i >= pos; i--)
 				if (handler.end)
@@ -195,10 +179,10 @@ function HTMLParser(html, handler)
 			stack.length = pos;
 		}
 	}
-}
+};
 
-function makeMap(str)
-{
+
+function makeMap(str) {
 	var obj = {}, items = str.split(",");
 	for (var i = 0; i < items.length; i++)
 		obj[items[i]] = true;

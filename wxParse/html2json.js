@@ -1,4 +1,7 @@
 /**
+ * html2Json 改造来自: https://github.com/Jxck/html2json
+ * 
+ * 
  * author: Di (微信小程序开发工程师)
  * organization: WeAppDev(微信小程序开发论坛)(http://weappdev.com)
  *               垂直微信小程序开发交流社区
@@ -13,8 +16,8 @@ var __placeImgeUrlHttps = "https";
 var __emojisReg = '';
 var __emojisBaseSrc = '';
 var __emojis = {};
-var wxDiscode = require('wxDiscode.js');
-var HTMLParser = require('htmlparser.js');
+var wxDiscode = require('./wxDiscode.js');
+var HTMLParser = require('./htmlparser.js');
 // Empty Elements - HTML 5
 var empty = makeMap("area,base,basefont,br,col,frame,hr,img,input,link,meta,param,embed,command,keygen,source,track,wbr");
 // Block Elements - HTML 5
@@ -46,100 +49,82 @@ function q(v) {
 function removeDOCTYPE(html) {
     return html
         .replace(/<\?xml.*\?>\n/, '')
-        .replace(/<!doctype.*\>\n/, '')
-        .replace(/<!DOCTYPE.*\>\n/, '');
+        .replace(/<.*!doctype.*\>\n/, '')
+        .replace(/<.*!DOCTYPE.*\>\n/, '');
 }
 
 
-function html2json(html, bindName)
-{
+function html2json(html, bindName) {
     //处理字符串
     html = removeDOCTYPE(html);
     html = wxDiscode.strDiscode(html);
     //生成node节点
     var bufArray = [];
-    var results =
-    {
+    var results = {
         node: bindName,
         nodes: [],
         images:[],
         imageUrls:[]
     };
-    HTMLParser(html, 
-    {
-        start: function (tag, attrs, unary)
-        {
+    HTMLParser(html, {
+        start: function (tag, attrs, unary) {
             //debug(tag, attrs, unary);
             // node for this element
-            var node = 
-            {
+            var node = {
                 node: 'element',
-                tag: tag
+                tag: tag,
             };
-            if (block[tag])
-            {
+
+            if (block[tag]) {
                 node.tagType = "block";
-            }
-            else if (inline[tag])
-            {
+            } else if (inline[tag]) {
                 node.tagType = "inline";
-            }
-            else if (closeSelf[tag])
-            {
+            } else if (closeSelf[tag]) {
                 node.tagType = "closeSelf";
             }
-            if (attrs.length !== 0)
-            {
-                node.attr = attrs.reduce(
-                function (pre, attr)
-                {
+
+            if (attrs.length !== 0) {
+                node.attr = attrs.reduce(function (pre, attr) {
                     var name = attr.name;
                     var value = attr.value;
-                    if (name == 'class')
-                    {
+                    if (name == 'class') {
                         console.dir(value);
                         //  value = value.join("")
                         node.classStr = value;
                     }
                     // has multi attibutes
                     // make it array of attribute
-                    if (name == 'style')
-                    {
+                    if (name == 'style') {
                         console.dir(value);
                         //  value = value.join("")
                         node.styleStr = value;
                     }
-                    if (value.match(/ /))
-                    {
+                    if (value.match(/ /)) {
                         value = value.split(' ');
                     }
+                    
 
                     // if attr already exists
                     // merge it
-                    if (pre[name])
-                    {
-                        if (Array.isArray(pre[name]))
-                        {
+                    if (pre[name]) {
+                        if (Array.isArray(pre[name])) {
                             // already array, push to last
                             pre[name].push(value);
-                        }
-                        else
-                        {
+                        } else {
                             // single value, make it array
                             pre[name] = [pre[name], value];
                         }
-                    }
-                    else
-                    {
+                    } else {
                         // not exist, put it
                         pre[name] = value;
                     }
+
                     return pre;
                 }, {});
             }
+
             //对img添加额外数据
-            if (node.tag === 'img')
-            {
+            if (node.tag === 'img') {
                 node.imgIndex = results.images.length;
                 var imgUrl = node.attr.src;
                 imgUrl = wxDiscode.urlToHttpUrl(imgUrl, __placeImgeUrlHttps);
@@ -148,96 +133,88 @@ function html2json(html, bindName)
                 results.images.push(node);
                 results.imageUrls.push(imgUrl);
             }
-            if (unary)
-            {
+            //临时记录source资源
+            if(node.tag === 'source'){
+                results.source = node.attr.src;
+            }
+            
+            if (unary) {
                 // if this tag dosen't have end tag
                 // like <img src="hoge.png"/>
                 // add to parents
                 var parent = bufArray[0] || results;
-                if (parent.nodes === undefined)
-                {
+                if (parent.nodes === undefined) {
                     parent.nodes = [];
                 }
                 parent.nodes.push(node);
-            }
-            else
-            {
+            } else {
                 bufArray.unshift(node);
             }
         },
-        end: function (tag)
-        {
+        end: function (tag) {
             //debug(tag);
             // merge into parent tag
             var node = bufArray.shift();
             if (node.tag !== tag) console.error('invalid state: mismatch end tag');
 
-            if (bufArray.length === 0)
-            {
-                results.nodes.push(node);
+            //当有缓存source资源时于于video补上src资源
+            if(node.tag === 'video' && results.source){
+                node.attr.src = results.source;
+                delete result.source;
             }
-            else
-            {
+            
+            if (bufArray.length === 0) {
+                results.nodes.push(node);
+            } else {
                 var parent = bufArray[0];
-                if (parent.nodes === undefined)
-                {
+                if (parent.nodes === undefined) {
                     parent.nodes = [];
                 }
                 parent.nodes.push(node);
             }
         },
-        chars: function (text)
-        {
+        chars: function (text) {
             //debug(text);
-            var node =
-            {
+            var node = {
                 node: 'text',
                 text: text,
                 textArray:transEmojiStr(text)
             };
             
-            if (bufArray.length === 0)
-            {
+            if (bufArray.length === 0) {
                 results.nodes.push(node);
-            }
-            else
-            {
+            } else {
                 var parent = bufArray[0];
-                if (parent.nodes === undefined)
-                {
+                if (parent.nodes === undefined) {
                     parent.nodes = [];
                 }
                 parent.nodes.push(node);
             }
         },
-        comment: function (text)
-        {
+        comment: function (text) {
             //debug(text);
-            var node = {
-                node: 'comment',
-                text: text
-            };
-            var parent = bufArray[0];
-            if (parent.nodes === undefined)
-            {
-                parent.nodes = [];
-            }
-            parent.nodes.push(node);
-        }
+            // var node = {
+            //     node: 'comment',
+            //     text: text,
+            // };
+            // var parent = bufArray[0];
+            // if (parent.nodes === undefined) {
+            //     parent.nodes = [];
+            // }
+            // parent.nodes.push(node);
+        },
     });
     return results;
 };
 
-function transEmojiStr(str)
-{
+function transEmojiStr(str){
   // var eReg = new RegExp("["+__reg+' '+"]");
 //   str = str.replace(/\[([^\[\]]+)\]/g,':$1:')
   
   var emojiObjs = [];
   //如果正则表达式为空
-  if(__emojisReg.length == 0 || !__emojis)
-  {
-      var emojiObj = {};
+  if(__emojisReg.length == 0 || !__emojis){
+      var emojiObj = {}
       emojiObj.node = "text";
       emojiObj.text = str;
       array = [emojiObj];
@@ -247,24 +224,21 @@ function transEmojiStr(str)
   str = str.replace(/\[([^\[\]]+)\]/g,':$1:')
   var eReg = new RegExp("[:]");
   var array = str.split(eReg);
-  for(var i = 0; i < array.length; i++)
-  {
+  for(var i = 0; i < array.length; i++){
     var ele = array[i];
     var emojiObj = {};
-    if(__emojis[ele])
-    {
+    if(__emojis[ele]){
       emojiObj.node = "element";
       emojiObj.tag = "emoji";
       emojiObj.text = __emojis[ele];
       emojiObj.baseSrc= __emojisBaseSrc;
-    }
-    else
-    {
+    }else{
       emojiObj.node = "text";
       emojiObj.text = ele;
     }
     emojiObjs.push(emojiObj);
   }
+  
   return emojiObjs;
 }
 

@@ -12,35 +12,40 @@
 /**
  * utils函数引入
  **/
-import showdown from 'showdown.js';
-import HtmlToJson from 'html2json.js';
+import showdown from './showdown.js';
+import HtmlToJson from './html2json.js';
 /**
  * 配置及公有属性
  **/
 /**
  * 主函数入口区
  **/
-function wxParse(bindName = 'wxParseData', type='html', data='<div class="color:red;">数据不能为空</div>', target,imagePadding)
-{
+function wxParse(bindName = 'wxParseData', type='html', data='<div class="color:red;">数据不能为空</div>', target,imagePadding) {
   var that = target;
   var transData = {};//存放转化后的数据
-  if (type == 'html')
-  {
+  if (type == 'html') {
     transData = HtmlToJson.html2json(data, bindName);
     //console.log(JSON.stringify(transData, ' ', ' '));
-  }
-  else if (type == 'md' || type == 'markdown')
-  {
+  } else if (type == 'md' || type == 'markdown') {
     var converter = new showdown.Converter();
     var html = converter.makeHtml(data);
     transData = HtmlToJson.html2json(html, bindName);
     //console.log(JSON.stringify(transData, ' ', ' '));
   }
+  transData.view = {};
+  transData.view.imagePadding = 0;
+  if(typeof(imagePadding) != 'undefined'){
+    transData.view.imagePadding = imagePadding
+  }
   return transData;
+  var bindData = {};
+  bindData[bindName] = transData;
+  that.setData(bindData)
+  that.wxParseImgLoad = wxParseImgLoad;
+  that.wxParseImgTap = wxParseImgTap;
 }
 // 图片点击事件
-function wxParseImgTap(e)
-{
+function wxParseImgTap(e) {
   var that = this;
   var nowImgUrl = e.target.dataset.src;
   var tagFrom = e.target.dataset.from;
