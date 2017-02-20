@@ -176,13 +176,13 @@ Page({
   {
     this.setData({ShowMenu:true});
   },
-  th_reply:function(e)//回复指定No.
+  th_reply:function(e)//引用指定No.
   {
     wx.navigateTo({url: '../new/new?mode=2&revid=' + page_id + "&rev_text=>>No." + LongTapID + "\n"});
     LongTapID = "";
     this.setData({ShowMenu:true});
   },
-  add_reply_list:function(e)//添加到回复列表
+  add_reply_list:function(e)//添加到引用列表
   {
     if(LongTapID!="")
     {
@@ -192,9 +192,11 @@ Page({
       this.setData({ShowMenu:true});
     }
   },
-  th_report:function(e)//举报这个No.
+  th_report:function(e)//举报这个回复
   {
-
+    wx.navigateTo({url: '../new/new?mode=3&revid=18&rev_text=>>No.'+LongTapID});
+    LongTapID = "";
+    this.setData({ShowMenu:true});
   },
   onPullDownRefresh: function()//下拉刷新
   {
@@ -248,6 +250,10 @@ Page({
     if(temp!="")
       wx.setStorageSync('ReplyIDList', "")
     wx.navigateTo({url: '../new/new?mode=2&revid=' + page_id + "&rev_text="+temp});
+  },
+  tap_report:function()//举报本串
+  {
+    wx.navigateTo({url: '../new/new?mode=3&revid=18&rev_text=>>No.'+page_id});
   },
   tap_sl: function()
   {

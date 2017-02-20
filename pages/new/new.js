@@ -178,9 +178,15 @@ Page({
     },
     onLoad:function(e)
     {
-        if(e.mode==1)//发新串
+        if(e.mode==1 || e.mode==3)//发新串或者举报某个串
         {
-            wx.setNavigationBarTitle({title: '发新串'});
+            if(e.mode == 3)
+              wx.setNavigationBarTitle({title: '举报' + e.rev_text});
+            else
+              wx.setNavigationBarTitle({title: '发新串'});
+
+            if(e.rev_text != "" && e.rev_text != undefined && e.rev_text != null)
+              this.setData({txt_value:e.rev_text+"\n理由："});
         }
         else if(e.mode==2)//回复某个串
         {
@@ -189,6 +195,7 @@ Page({
               this.setData({txt_value:e.rev_text});
             //wx.setStorageSync('String', Object/String)
         }
+        if(e.mode==3)e.mode=1;
         resto_id = e.revid;
         re_mode  = e.mode;
     },
