@@ -137,3 +137,10 @@
     text-align: center;
     color: #00ccff;
 }
+.bequote{/*引用*/
+  color:#9BCD9B;
+  background-color: #EAEAEA;
+  font-size: 40rpx;
+  width: 300rpx;
+  margin-top: 1px;
+}

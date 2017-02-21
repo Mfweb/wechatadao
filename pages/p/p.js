@@ -1,4 +1,5 @@
 var WxParse = require('../../wxParse/wxParse.js');
+var AdaoAPI = require('../../API/adao.js');
 var page = 1;//当前页数
 var page_id = 0;//串ID
 var page_in = -1;//输入要跳转的页面
@@ -10,8 +11,16 @@ var sys_width  = 0;
 var post_run = false;//防止重复拉取
 var LongTapID = "";//长按选择的ID
 
-//获取数据
-var GetList = function(that)
+//引用串高亮
+function GetQuote(kid)
+{
+  var te = /(&gt;){2}(No\.){0,3}\d{1,11}/g;
+  var out =  kid.replace(te,"<view class=\"bequote\" bindtap=\"tap_quote\" id=\"$4\">$&</view>");
+  console.log(out);
+  return out;
+}
+//获取回复
+function GetList(that)
 {
   //console.log("start");
   if(post_run)return;
@@ -20,23 +29,11 @@ var GetList = function(that)
     that.setData({bot_text:that.data.bot_text + "\nLoading..."});
   else
     that.setData({bot_text:"Loading..."});
-  wx.request(
-  {
-    url:appInstance.globalData.thread_url,
-    data:
-    {
-      id : page_id,
-      page : page
-    },
-    header:
-    {
-      'User-Agent' : 'HavfunClient-WeChatAPP',
-      'content-type' : 'application/json',
-      'X-Requested-With':'XMLHttpRequest'
-    },
-
-    success:function(res)
-    {
+  AdaoAPI.api_request(
+    "",
+    appInstance.globalData.thread_url,
+    {id : page_id,page : page},
+    function(res){//success
       var list = that.data.list;
       if(list.length == 0)//第一页 添加正文内容
       {
@@ -74,13 +71,10 @@ var GetList = function(that)
       
       var len = 0;
       if(last_length > 0)
-      {
         len = res.data.replys.length - last_length;
-      }
       else
-      {
         len = res.data.replys.length;
-      }
+      
       if(len > 0)//本次拉取的数量大于0就push
       {
         list[0].replyCount = res.data.replyCount;
@@ -91,7 +85,8 @@ var GetList = function(that)
             res.data.replys[i].img = res.data.replys[i].img + res.data.replys[i].ext;
             res.data.replys[i].thumburl = appInstance.globalData.thumb_img_url;
           }
-          res.data.replys[i].html = WxParse.wxParse('item', 'html', res.data.replys[i].content, that,5);
+          res.data.replys[i].content = GetQuote(res.data.replys[i].content);
+          res.data.replys[i].html = WxParse.wxParse('item', 'html', res.data.replys[i].content, that,null);
           list.push(res.data.replys[i]);
         }
         that.setData({list : list});
@@ -117,8 +112,7 @@ var GetList = function(that)
       //console.log(list.length);
       that.setData({bot_text:(list.length-1) + "/" + list[0].replyCount});
     },
-    fail:function()
-    {
+    function(res){//fail
       that.setData({bot_text:"error"});
         wx.showToast({
           title: '加载失败',
@@ -126,12 +120,11 @@ var GetList = function(that)
           duration: 500
         });
     },
-    complete:function()
-    {
+    function(){//finish
       pw_run = false;
       post_run = false;
     }
-  });
+  );
 }
 
 Page({
@@ -301,5 +294,8 @@ Page({
     else
       page_in = -1;
   },
-
+  tap_quote:function(res)
+  {
+    console.log(res);
+  }
 })

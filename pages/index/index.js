@@ -1,14 +1,16 @@
 var WxParse   = require('../../wxParse/wxParse.js');
+var AdaoAPI   = require('../../API/adao.js');
 var page      = 1;//当前在多少页
 var page_id   = -1;//板块号
 var page_in   = 1;//输入的页数
 var appInstance = getApp();
 var pw_run = false;//防止下拉刷新清空列表的时候触发上拉加载
-var sys_height = 0;
+var sys_height = 0;//屏幕尺寸
 var sys_width  = 0;
-var post_run = false;
-//修改标题为当前板块
-var GetTitle = function(that)
+var post_run = false;//防止重复请求
+
+/*修改标题为当前板块*/
+function GetTitle(that)
 {
   for(let i = 0;i < that.data.flist.length;i++)
   {
@@ -23,29 +25,17 @@ var GetTitle = function(that)
     }
   }
 }
-//获取板块内串
-var GetList = function(that)
+/*获取板块内串*/
+function GetList(that)
 {
   if(post_run)return;
   post_run = true;
   that.setData({bot_text:"正在加载.."});
-  wx.request(
-  {
-    url:appInstance.globalData.show_forum_url,
-    data:
-    {
-      id : page_id,
-      page : page
-    },
-    header:
-    {
-      'User-Agent' : 'HavfunClient-WeChatAPP',//好像不允许修改(仿真工具不可以 真机可以)
-      'content-type' : 'multipart/form-data',
-      'X-Requested-With':'XMLHttpRequest'
-    },
-
-    success:function(res)
-    {
+  AdaoAPI.api_request(
+    "",
+    appInstance.globalData.show_forum_url,
+    {id : page_id,page : page},
+    function(res){//success
       var list = that.data.list;
       if(res.data.length > 0)
       {
@@ -56,7 +46,7 @@ var GetList = function(that)
             res.data[i].img = res.data[i].img + res.data[i].ext;
             res.data[i].thumburl = appInstance.globalData.thumb_img_url;
           }
-          res.data[i].html = WxParse.wxParse('item', 'html', res.data[i].content, that,5);
+          res.data[i].html = WxParse.wxParse('item', 'html', res.data[i].content, that,null);
           res.data[i].img_height = 0;
           res.data[i].img_width = 0;
           list.push(res.data[i]);
@@ -66,40 +56,28 @@ var GetList = function(that)
       }
       that.setData({bot_text:list.length+",上拉继续加载.."});
     },
-
-    fail:function()
-    {
-        wx.showToast({
-          title: '加载失败',
-          icon: 'success',
-          duration: 1500
-        })
+    function(res){//fail
+      wx.showToast({
+        title: '加载失败',
+        icon: 'success',
+        duration: 1500
+      })
     },
-    complete:function()
-    {
+    function(){//finish
       pw_run = false;
       post_run = false;
     }
-  });
+  );
 }
 
-
-//获取板块列表
-var GetFList = function(that)
+/*获得板块列表*/
+function GetFList(that)
 {
-  wx.request(
-  {
-    url:appInstance.globalData.get_forum_url,
-    data:{},
-    header:
-    {
-      'User-Agent' : 'HavfunClient-WeChatAPP',
-      'content-type' : 'application/json',
-      'X-Requested-With':'XMLHttpRequest'
-    },
-
-    success:function(res)
-    {
+  AdaoAPI.api_request(
+    "",
+    appInstance.globalData.get_forum_url,
+    null,
+    function(res){//success
       var list_temp = [];//板块列表
       if(res.data.length > 0)
       {
@@ -117,36 +95,35 @@ var GetFList = function(that)
         that.setData({flist : list_temp});
       }
     },
-
-    fail:function()
-    {
-        wx.showToast({
-          title: '板块列表加载失败',
-          icon: 'success',
-          duration: 500
-        })
-    }
-  });
+    function(res){//fail
+      wx.showToast({
+        title: '板块列表加载失败',
+        icon: 'success',
+        duration: 500
+      })
+    },null
+  );
 }
 
-var GetMainPicture = function(that)
+/*获得首页图片*/
+function GetMainPicture(that)
 {
-  wx.request({
-    url: 'https://mfweb.top/adao/getpicture.php',
-    data: {},
-    method: 'GET',
-    success: function(res)
-    {
+  AdaoAPI.api_request(
+    "",
+    appInstance.globalData.top_image_url,
+    null,
+    function(res){//success
       if(res.data!="error")
-      {
         that.setData({f_image:res.data});
-      }
     },
-    fail: function() {
-    }
-  });
+    function(res){//fail
+
+    },null
+  );
 }
-var refGet = function(that)
+
+/*重新拉取*/
+function refGet(that)
 {
   page = 1;
   that.data.list.splice(0,that.data.list.length);
@@ -178,12 +155,13 @@ Page(
     sys_width  = res.windowWidth;
     sys_height = res.windowHeight;
     var that = this;
-    GetFList(that);
     GetMainPicture(that);
+    GetFList(that);
     var select_n = wx.getStorageSync('SelectForumName');
     if(select_n != "")
       wx.setNavigationBarTitle({title: select_n});
     var select_f = wx.getStorageSync('SelectForumID');
+
     if(select_f != "")
       page_id = select_f;
     else
@@ -217,7 +195,7 @@ Page(
       urls:pr_imgs
     })
   },
-  bind_pic_load: function(e)
+  bind_pic_load: function(e)//图片加载完成
   {
     var list = this.data.list;
     var temp_width = 0;

@@ -1,19 +1,20 @@
+var AdaoAPI = require('../../API/adao.js');
 var re_mode = 0;
 var resto_id = 0;
 var appInstance = getApp();
 var user_cookie = '';//回复or发送使用的cookie
 
 /* 获取本地已启用的的Cookie */
-var location_get_cookie = function()
+function location_get_cookie()
 {
     return wx.getStorageSync('Cookie_Enable');
 }
 /* 从服务器获取Cookie */
-var adao_get_cookie = function()
+function adao_get_cookie()
 {
     var temp_cookie = '0';
     wx.request({
-    url: 'https://mfweb.top/adao/getcookie.php',
+    url:appInstance.globalData.get_cookie_url,
     method: 'GET',
     success: function(res){
         console.log(res);
@@ -32,8 +33,42 @@ var adao_get_cookie = function()
     });
     return temp_cookie;
 }
-/*发送没有图片的回复or新串*/
-var SendReplyNoImg = function(that,resto,content)
+
+/*发送完成CallBack*/
+function callback_success(res)
+{
+  if(res.data.info == (re_mode==1?"发帖成功":"回复成功"))
+  {
+    wx.navigateBack({delta: 1});
+  }
+  else
+  {
+    console.log(res);
+    wx.showToast({
+      title: res.data.info,
+      icon: 'success',
+      duration: 2000
+    });
+  }
+}
+/*发送失败CallBack*/
+function callback_fail(res)
+{
+  wx.showToast({
+    title: '发送失败',
+    icon: 'success',
+    duration: 2000
+  });
+  console.log(res);
+}
+/*调用完成CallBack*/
+function callback_finish(fdata)
+{
+  fdata.setData({UploadDisable:false,hidden:true});
+}
+
+/*发送or回复*/
+function A_Send(that,resto,content,file=null,water="true")
 {
   if(user_cookie == 'null')
   {
@@ -54,9 +89,10 @@ var SendReplyNoImg = function(that,resto,content)
     return;
   }
   that.setData({UploadDisable:true,hidden:false});
-  wx.request({
-    url: re_mode==1?appInstance.globalData.new_thread_url:appInstance.globalData.new_reply_url,
-    data: {
+  if(file==null)//无图
+  {
+    AdaoAPI.api_request(user_cookie,re_mode==1?appInstance.globalData.new_thread_url:appInstance.globalData.new_reply_url,
+    {
       resto:re_mode==1?null:resto,
       fid:re_mode==2?null:resto,
       name:'',
@@ -65,78 +101,12 @@ var SendReplyNoImg = function(that,resto,content)
       content:content,
       water:"true",
       image:''
-    },
-    header: {
-      'cookie'      :'userhash=' + user_cookie,
-      'content-type': 'application/x-www-form-urlencoded',
-      'user-angent':'HavfunClient-WeChatApp',
-      'X-Requested-With':'XMLHttpRequest'
-    },
-    method: 'POST',
-    success: function(res){
-      if(res.data.info == (re_mode==1?"发帖成功":"回复成功"))
-      {
-        wx.navigateBack({delta: 1});
-      }
-      else
-      {
-        console.log(res);
-        wx.showToast({
-          title: res.data.info,
-          icon: 'success',
-          duration: 2000
-        });
-      }
-    },
-    fail: function() {
-      wx.showToast({
-          title: '发送失败',
-          icon: 'success',
-          duration: 2000
-        });
-      console.log(res);
-    },
-    complete:function(){
-      that.setData({UploadDisable:false,hidden:true});
-    }
-  });
-}
-/*发送有图片的回复or新串*/
-var SendReply = function(that,resto,content,file,water)
-{
-  if(user_cookie == 'null')
-  {
-    wx.showToast({
-      title: '正在获取cookie..',
-      icon: 'success',
-      duration: 1500
-    });
-    return;
+    },callback_success,callback_fail,callback_finish,that);
   }
-  else if(user_cookie == 'error')
+  else //有图
   {
-    wx.showToast({
-      title: '没有开饼干..',
-      icon: 'success',
-      duration: 1500
-    });
-    return;
-  }
-  that.setData({UploadDisable:true,hidden:false});
-  wx.uploadFile({
-    url: re_mode==1?'https://h.nimingban.com/Home/Forum/doPostThread.html':'https://h.nimingban.com/Home/Forum/doReplyThread.html?appid=wechatapp',
-    filePath:file,
-    name:'image',
-    header:{
-      'cookie'      :'userhash=' + user_cookie,
-      'content-type':'application/x-www-form-urlencoded',
-      'X-Requested-With':'XMLHttpRequest'
-    },
-    formData:{
-      header:{
-      'cookie'      :'userhash=' + user_cookie,
-      'content-type':'application/x-www-form-urlencoded'
-      },
+    AdaoAPI.api_uploadfile(user_cookie,re_mode==1?appInstance.globalData.new_thread_url:appInstance.globalData.new_reply_url,
+    {
       resto:re_mode==1?null:resto,
       fid:re_mode==2?null:resto,
       name:"",
@@ -144,36 +114,9 @@ var SendReply = function(that,resto,content,file,water)
       title:"",
       content:content,
       water:water
-    },
-    success: function(res){
-      res.data = JSON.parse(res.data);//uploadFile并没有像request那样自动使用parse
-      if(res.data.info == (re_mode==1?"发帖成功":"回复成功"))
-      {
-        wx.navigateBack({delta: 1});
-      }
-      else
-      {
-        wx.showToast({
-          title: res.data.info,
-          icon: 'success',
-          duration: 2000
-        });
-      }
-    },
-    fail: function(res) {
-        wx.showToast({
-          title: '发送失败',
-          icon: 'success',
-          duration: 2000
-        });
-      console.log(res);
-    },
-    complete:function(){
-      that.setData({UploadDisable:false,hidden:true});
-    }
-  })
+    },file,callback_success,callback_fail,callback_finish,that);
+  }
 }
-
 
 Page({
     data:{
@@ -275,28 +218,9 @@ Page({
     },
     form_submit:function(res)
     {
-      this.setData({hidden:false});
-      //console.log(res);
       var that = this;
-      if(res.detail.value.pic == "")//没有图
-      {
-        SendReplyNoImg(
-          that,
-          resto_id,
-          res.detail.value.text
-        );
-      }
-      else//有图
-      {
-        SendReply(
-          that,
-          resto_id,
-          res.detail.value.text,
-          res.detail.value.pic,
-          res.detail.value.watermark
-        );
-      }
-      //console.log(resto_id);
-      this.setData({hidden:true});
+      var s_file = res.detail.value.pic;
+      if(s_file=="")s_file = null;
+      A_Send(that,resto_id,res.detail.value.text,s_file,res.detail.value.watermark);
     }
 })
