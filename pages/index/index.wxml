@@ -7,10 +7,10 @@
 <view class="left_menu {{open ? 'c-state1' : ''}}">
   <scroll-view class="fliststl" scroll-y="true">
   <image class="f_image" src="{{f_image}}" id="{{f_image}}" bindtap="max_picture" mode="aspectFit"></image>
-    <view wx:for="{{flist}}" wx:key="fwxKey">
+    <view wx:for="{{flist}}" wx:key="f_list">
       <view class="flist_group">{{item.name}}</view>
       <view class="v_hr_f1"></view>
-      <view wx:for="{{item.forums}}" id="{{item.id}}" bindtap="bind_fview_tap">
+      <view wx:for="{{item.forums}}" id="{{item.id}}" bindtap="bind_fview_tap" wx:key="ff_list">
         <view wx:if="{{item.showNameHtml==''}}" class="flist_f">{{item.name}}</view>
         <view wx:if="{{item.showNameHtml!=''}}" class="flist_f"><template  is="wxParse" data="{{wxParseData:item.showName.nodes}}"/></view>
       </view>
@@ -24,7 +24,7 @@
 </modal>
 <!--主列表-->
 <view class="container {{open ? 'c-state3' : ''}}">
-  <view class="item" wx:for="{{list}}" id="{{item.id}}" bindtap="bind_view_tap">
+  <view class="item" wx:for="{{list}}" id="{{item.id}}" bindtap="bind_view_tap" wx:key="b_list">
     <view class="text">
       <view class="b1">
         <view class="cid">No.{{item.id}}</view>

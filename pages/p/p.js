@@ -9,6 +9,7 @@ var sys_height = 0;//系统屏幕尺寸
 var sys_width  = 0;
 var post_run = false;//防止重复拉取
 var LongTapID = "";//长按选择的ID
+
 //获取数据
 var GetList = function(that)
 {
@@ -90,7 +91,6 @@ var GetList = function(that)
             res.data.replys[i].img = res.data.replys[i].img + res.data.replys[i].ext;
             res.data.replys[i].thumburl = appInstance.globalData.thumb_img_url;
           }
-            
           res.data.replys[i].html = WxParse.wxParse('item', 'html', res.data.replys[i].content, that,5);
           list.push(res.data.replys[i]);
         }

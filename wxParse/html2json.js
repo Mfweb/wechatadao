@@ -99,6 +99,18 @@ function html2json(html, bindName) {
                         //  value = value.join("")
                         node.styleStr = value;
                     }
+                    if (name == 'color')
+                    {
+                        //console.dir(value);
+                        if(node.styleStr==undefined)
+                        {
+                            node.styleStr = "color:"+value+";";
+                        }
+                        else
+                        {
+                            node.styleStr += "color:"+value+";";
+                        }
+                    }
                     if (value.match(/ /)) {
                         value = value.split(' ');
                     }
