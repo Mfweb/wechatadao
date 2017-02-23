@@ -3,7 +3,7 @@ var re_mode = 0;
 var resto_id = 0;
 var appInstance = getApp();
 var user_cookie = '';//回复or发送使用的cookie
-
+var all_text = "";
 /* 获取本地已启用的的Cookie */
 function location_get_cookie()
 {
@@ -126,7 +126,27 @@ Page({
       select_image_hid:true,
       watermark:"false",
       hidden:true,
-      UploadDisable:false
+      UploadDisable:false,
+      bq_item:["颜",
+        "|∀ﾟ", "(´ﾟДﾟ`)", "(;´Д`)", "(｀･ω･)", "(=ﾟωﾟ)=", 
+        "| ω・´)", "|-` )", "|д` )", "|ー` )", "|∀` )", 
+        "(つд⊂)", "(ﾟДﾟ≡ﾟДﾟ)", "(＾o＾)ﾉ", "(|||ﾟДﾟ)", "( ﾟ∀ﾟ)",
+         "( ´∀`)", "(*´∀`)", "(*ﾟ∇ﾟ)", "(*ﾟーﾟ)", "(　ﾟ 3ﾟ)", 
+         "( ´ー`)", "( ・_ゝ・)", "( ´_ゝ`)", "(*´д`)", "(・ー・)", 
+         "(・∀・)", "(ゝ∀･)", "(〃∀〃)", "(*ﾟ∀ﾟ*)", "( ﾟ∀。)", 
+         "( `д´)", "(`ε´ )", "(`ヮ´ )", "σ`∀´)", " ﾟ∀ﾟ)σ",
+         "ﾟ ∀ﾟ)ノ", "(╬ﾟдﾟ)", "(|||ﾟдﾟ)", "( ﾟдﾟ)", "Σ( ﾟдﾟ)",
+         "( ;ﾟдﾟ)", "( ;´д`)", "(　д ) ﾟ ﾟ", "( ☉д⊙)", "(((　ﾟдﾟ)))", 
+         "( ` ・´)", "( ´д`)", "( -д-)", "(>д<)", "･ﾟ( ﾉд`ﾟ)", 
+         "( TдT)", "(￣∇￣)", "(￣3￣)", "(￣ｰ￣)", "(￣ . ￣)", 
+         "(￣皿￣)", "(￣艸￣)", "(￣︿￣)", "(￣︶￣)", "ヾ(´ωﾟ｀)", 
+         "(*´ω`*)", "(・ω・)", "( ´・ω)", "(｀・ω)", "(´・ω・`)", 
+         "(`・ω・´)", "( `_っ´)", "( `ー´)", "( ´_っ`)", "( ´ρ`)", 
+         "( ﾟωﾟ)", "(oﾟωﾟo)", "(　^ω^)", "(｡◕∀◕｡)", "/( ◕‿‿◕ )\\", 
+         "ヾ(´ε`ヾ)", "(ノﾟ∀ﾟ)ノ", "(σﾟдﾟ)σ", "(σﾟ∀ﾟ)σ", "|дﾟ )", 
+         "┃電柱┃", "ﾟ(つд`ﾟ)", "ﾟÅﾟ )　", "⊂彡☆))д`)", "⊂彡☆))д´)", 
+         "⊂彡☆))∀`)", "(´∀((☆ミつ"],
+         bq_index:0,
     },
     onLoad:function(e)
     {
@@ -166,7 +186,7 @@ Page({
         user_cookie = temp;
       }
     },
-    cl_tp:function()
+    cl_tp:function()//清空输入和图片
     {
       this.setData({
         txt_value:"",
@@ -175,7 +195,7 @@ Page({
         select_image_hid:true
         });
     },
-    pc_tp:function()
+    pc_tp:function()//选择图片
     {
       var that = this;
       wx.chooseImage({
@@ -208,9 +228,11 @@ Page({
         }
       });
     },
-    onSubmit:function(res)
+    bindPickerChange:function(res)//选择了颜文字
     {
-      //console.log(res);
+      all_text += this.data.bq_item[res.detail.value];
+
+      this.setData({bq_index:res.detail.value,txt_value:all_text,txt_focus:true});
     },
     onCancel:function()
     {
@@ -222,5 +244,9 @@ Page({
       var s_file = res.detail.value.pic;
       if(s_file=="")s_file = null;
       A_Send(that,resto_id,res.detail.value.text,s_file,res.detail.value.watermark);
+    },
+    text_input:function(res)
+    {
+      all_text = res.detail.value;
     }
 })

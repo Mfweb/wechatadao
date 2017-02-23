@@ -37,9 +37,7 @@
   opacity:0.7;
   z-index:1;
 }
-.input_cs{
-  border: 1px solid #FF8000;
-}
+
 .f_image{
   width: 100%;
 }

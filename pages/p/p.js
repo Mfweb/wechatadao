@@ -14,9 +14,10 @@ var LongTapID = "";//长按选择的ID
 //引用串高亮
 function GetQuote(kid)
 {
-  var te = /(&gt;){2}(No\.){0,3}\d{1,11}/g;
-  var out =  kid.replace(te,"<view class=\"bequote\" bindtap=\"tap_quote\" id=\"$4\">$&</view>");
-  console.log(out);
+  var te = /((&gt;){2}|(>){2})(No\.){0,3}\d{1,11}/g;//正则表达式匹配出所有引用串号，支持>>No.123123和>>123123 两种引用格式
+  var out =  kid.replace(te,'<view class="bequote">$&</view>');
+  if(out!=kid)
+    console.log(out);
   return out;
 }
 //获取回复

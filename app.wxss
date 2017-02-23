@@ -144,3 +144,6 @@
   width: 300rpx;
   margin-top: 1px;
 }
+.input_cs{
+  border: 1px solid #FF8000;
+}

@@ -22,7 +22,7 @@
 }
 .sicons{
     height: 40px;
-    width: 40ox;
+    width: 40px;
     margin-left: 20px;
     margin-right: 20px;
 }
@@ -32,4 +32,16 @@
     position: absolute;
     margin-top: 0px;
     opacity:0.4;
+}
+.h_emot{
+    height: 40px;
+    width: 120px;
+    margin-left: 20px;
+    margin-right: -20px;
+}
+.hi_emot{
+    width:120px;
+    height:40px;
+    font-size: 30px;
+    margin: 0 auto;
 }
