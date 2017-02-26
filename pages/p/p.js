@@ -11,14 +11,68 @@ var sys_width  = 0;
 var post_run = false;//防止重复拉取
 var LongTapID = "";//长按选择的ID
 
+function GetQuoteBody(all_kid,that)
+{
+  console.log(all_kid);
+  for(let i=0;i<all_kid.length;i++)
+  {
+    AdaoAPI.api_request(
+      "",
+      appInstance.globalData.get_thread_url + "&id=" + all_kid[i],
+      {},
+      function(res,that){
+        console.log(res);
+
+        var q_list = that.data.q_list;
+        if(res.data=="thread不存在")
+        {
+          var temp = {id:"ID不存在"};
+          q_list.push(temp);
+        }
+        else
+        {
+          res.data.html = WxParse.wxParse('item', 'html', res.data.content, that,null);
+          if(res.data.img != "")
+          {
+            res.data.img = res.data.img + res.data.ext;
+            res.data.thumburl = appInstance.globalData.thumb_img_url;
+          }
+          q_list.push(res.data);
+        }
+        that.setData({q_list:q_list});
+      },
+      function(res){
+        console.log("error");
+      },
+      null,that);
+  }
+}
 //引用串高亮
 function GetQuote(kid)
 {
   var te = /((&gt;){2}|(>){2})(No\.){0,3}\d{1,11}/g;//正则表达式匹配出所有引用串号，支持>>No.123123和>>123123 两种引用格式
-  var out =  kid.replace(te,'<view class="bequote">$&</view>');
-  if(out!=kid)
-    console.log(out);
-  return out;
+  var te2 = /\d{1,11}/g;
+  var out_data = {html:null,all_kid:[]};
+  
+  var all_find = kid.match(te);
+  if(all_find!=null && all_find!=false && all_find.length>0)
+  {
+    out_data.html = kid.replace(te,'<view class="bequote">$&</view>');
+    for(let i = 0;i< all_find.length;i++)
+    {
+      let temp_find = all_find[i].match(te2);
+      if(temp_find!=null && temp_find!=false && temp_find.length>0)
+      {
+        out_data.all_kid.push(temp_find[0]);
+      }
+    }
+  }
+  else
+  {
+    out_data.html = kid;
+  }
+  console.log(out_data);
+  return out_data;
 }
 //获取回复
 function GetList(that)
@@ -26,8 +80,8 @@ function GetList(that)
   //console.log("start");
   if(post_run)return;
   post_run = true;
-  if(page == 1)
-    that.setData({bot_text:that.data.bot_text + "\nLoading..."});
+  if(page != 1)
+    that.setData({bot_text:that.data.bot_text + ",Loading..."});
   else
     that.setData({bot_text:"Loading..."});
   AdaoAPI.api_request(
@@ -38,6 +92,8 @@ function GetList(that)
       var list = that.data.list;
       if(list.length == 0)//第一页 添加正文内容
       {
+        var temp_fid = GetQuote(res.data.content);
+
         var header = {
           'id':res.data.id,
           'now':res.data.now,
@@ -45,7 +101,9 @@ function GetList(that)
           'name':res.data.name,
           'email':res.data.email,
           'title':res.data.title,
-          'html':WxParse.wxParse('item', 'html', res.data.content, that,5),
+          'html':WxParse.wxParse('item', 'html', temp_fid.html, that,null),
+          'content':temp_fid.html,
+          'all_kid':temp_fid.all_kid,
           'admin':res.data.admin,
           'replyCount':res.data.replyCount,
           'sage':res.data.sage,
@@ -86,7 +144,9 @@ function GetList(that)
             res.data.replys[i].img = res.data.replys[i].img + res.data.replys[i].ext;
             res.data.replys[i].thumburl = appInstance.globalData.thumb_img_url;
           }
-          res.data.replys[i].content = GetQuote(res.data.replys[i].content);
+          let temp_html = GetQuote(res.data.replys[i].content);
+          res.data.replys[i].content = temp_html.html;//正则高亮所有引用串号
+          res.data.replys[i].all_kid = temp_html.all_kid;
           res.data.replys[i].html = WxParse.wxParse('item', 'html', res.data.replys[i].content, that,null);
           list.push(res.data.replys[i]);
         }
@@ -137,7 +197,9 @@ Page({
   bot_text:"",
   modalFlag:true,//显示跳转页面
   default_page:1,//跳转页面默认值
-  ShowMenu:true
+  ShowMenu:true,
+  open:false,
+  q_list:[]
  },
  
   onLoad:function(e)
@@ -157,13 +219,21 @@ Page({
 
   },
 
-  bind_view_tap: function(e)
+  bind_view_tap: function(e)//点击查看引用串内容
   {
-
+    //console.log(e.currentTarget.id);
+    var all_kid = this.data.list[e.currentTarget.id].all_kid;
+    if(all_kid!=null && all_kid.length>0)
+    {
+      this.setData({q_list:[]});
+      var that = this;
+      GetQuoteBody(all_kid,that);
+      this.setData({open:true});
+    }
   },
   bind_view_long_tap:function(e)//长按
   {
-    LongTapID = e.currentTarget.id;
+    LongTapID = this.data.list[e.currentTarget.id].id;
     this.setData({ShowMenu:false});
   },
   MenuChange:function(e)//关闭下部菜单
@@ -215,9 +285,14 @@ Page({
   },
   bind_pic_tap: function(e)//单击图片
   {
-    var pr_imgs = [appInstance.globalData.full_img_url + this.data.list[e['currentTarget'].id].img];
+    var img_url;
+    if(this.data.open)
+      img_url = this.data.q_list[e['currentTarget'].id].img;
+    else
+      img_url = this.data.list[e['currentTarget'].id].img;
+    var pr_imgs = [appInstance.globalData.full_img_url + img_url];
     wx.previewImage({
-      current: appInstance.globalData.thumb_img_url + this.data.list[e['currentTarget'].id].img,
+      current: appInstance.globalData.thumb_img_url + img_url,
       urls:pr_imgs
     })
   },
@@ -298,5 +373,13 @@ Page({
   tap_quote:function(res)
   {
     console.log(res);
+  },
+  f_touch:function()
+  {
+
+  },
+  tap_ch:function()
+  {
+    this.setData({open:false});
   }
 })

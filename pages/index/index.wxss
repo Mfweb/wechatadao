@@ -1,43 +1,68 @@
 /**index.wxss**/
-.c-state1{
-  transform: rotate(0deg) scale(1) translate(100%,0%); 
-  -webkit-transform: rotate(0deg) scale(1) translate(100%,0%); 
-}
-.c-state2{
-  transform: rotate(0deg) scale(1) translate(50%,0%); 
-  -webkit-transform: rotate(0deg) scale(1) translate(50%,0%); 
-}
-
-.c-state3{
-  transform: rotate(0deg) scale(1) translate(50%,0%); 
-  -webkit-transform: rotate(0deg) scale(1) translate(50%,0%); 
+.menu_open{
+  transform: rotate(0deg) scale(0.9) translate(420rpx,0%); 
+  -webkit-transform: rotate(0deg) scale(0.9) translate(420rpx,0%); 
 }
 
 .left_menu{/*左侧板块列表*/
   display: flex;
   position: fixed;
   margin: 0px;
-  width: 50%;
-  margin-left: -52%;
+  width: 380rpx;
+  margin-left: -380rpx;
   margin-top: 0px;
-  background: #DBDBDB;
-  height: 100%;
+  height: 90%;
+  background: #fff;
   transition: All 0.4s ease; 
   -webkit-transition: All 0.4s ease;
   z-index:4;
   box-shadow: 0px 0px 6px 0px #fff;
 }
-.box{/*遮罩层*/
-  position:fixed;
-  top:0;
-  bottom:0;
-  left:0;
-  right:0;
-  background:#000;
-  opacity:0.7;
-  z-index:1;
-}
 
 .f_image{
   width: 100%;
+}
+
+.v_hr_f1{/*板块列表分割线*/
+  height: 1px;
+  width: 100%;
+  margin: 0px auto;
+  background: #A1A1A1;
+  border: 1px solid #C4C4C4;
+  border-radius: 2px;
+}
+
+.v_hr_f2{/*板块列表分割线*/
+  height: 1px;
+  width: 90%;
+  margin: 0px auto;
+  background: #A1A1A1;
+  border: 1px solid #C4C4C4;
+  border-radius: 2px;
+}
+.fliststl{/*板块列表外框*/
+  font-family: 'PingFang SC', 'Helvetica Neue', Helvetica, 'Droid Sans Fallback', 'Microsoft Yahei', sans-serif;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  display:block;
+}
+.f_list_all{
+  width: 100%;
+}
+.flist_group{/*板块group*/
+  /*margin-top: 10px;*/
+  width: 100%;
+  font-size: 15px;
+  background-color: #DBDBDB;
+}
+
+.flist_f{/*板块*/
+  margin: 0px 0px 0px 10px;
+  font-size: 20px;
+  background-color: #fff;
+}
+
+.flist_f:active{
+  background: #C4C4C4;
 }

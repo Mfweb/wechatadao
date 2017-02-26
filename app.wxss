@@ -23,7 +23,7 @@
 } 
 
 .item{/*主列表*/
-  width: 92%;
+  width: 95%;
   height: auto;
   margin: 0px 0px 0px 0px;
 }
@@ -41,14 +41,7 @@
   border: 1px solid #C4C4C4;
   border-radius: 2px;
 }
-.v_hr_f1{/*板块列表分割线*/
-  height: 1px;
-  width: 90%;
-  margin: 0px auto;
-  background: #A1A1A1;
-  border: 1px solid #C4C4C4;
-  border-radius: 2px;
-}
+
 
 .b1{/*第一行信息栏 ID UID 时间*/
   display:flex;
@@ -107,27 +100,10 @@
   height: 45px;
   margin: 0px 15px 0px 15px;
 }
-
-.fliststl{/*板块列表外框*/
-  font-family: 'PingFang SC', 'Helvetica Neue', Helvetica, 'Droid Sans Fallback', 'Microsoft Yahei', sans-serif;
-  width: 100%;
-  left: 0;
-  display: block;
-  margin: 10px auto;
-  margin-left: 10px;
-  margin-bottom: 30px;
-  height: 100%;
+.icons:active{
+  filter: 0px 0px #000;
 }
 
-.flist_group{/*板块group*/
-  margin-top: 10px;
-  width: 100%;
-  font-size: 15px;
-}
-.flist_f{/*板块*/
-  margin: 2px 2px 2px 10px;
-  font-size: 20px;
-}
 .list_bot{
     width: 100%;
     background: #F5F5F5;
@@ -146,4 +122,14 @@
 }
 .input_cs{
   border: 1px solid #FF8000;
+}
+.box{/*遮罩层*/
+  position:fixed;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  background:#000;
+  opacity:0.7;
+  z-index:1;
 }

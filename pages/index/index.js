@@ -28,7 +28,7 @@ function GetTitle(that)
 /*获取板块内串*/
 function GetList(that)
 {
-  if(post_run)return;
+  if(post_run || page_id==-1)return;
   post_run = true;
   that.setData({bot_text:"正在加载.."});
   AdaoAPI.api_request(
@@ -311,5 +311,9 @@ Page(
       current: res.currentTarget.id,
       urls:pr_imgs
     })
-  }
+  },
+  f_touch:function()
+{
+  console.log(1);
+}
 })
