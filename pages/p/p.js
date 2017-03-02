@@ -10,6 +10,7 @@ var sys_height = 0;//系统屏幕尺寸
 var sys_width  = 0;
 var post_run = false;//防止重复拉取
 var LongTapID = "";//长按选择的ID
+var lont_tap_lock = false;
 
 function GetQuoteBody(all_kid,that)
 {
@@ -222,6 +223,7 @@ Page({
   bind_view_tap: function(e)//点击查看引用串内容
   {
     //console.log(e.currentTarget.id);
+    if(lont_tap_lock)return;
     var all_kid = this.data.list[e.currentTarget.id].all_kid;
     if(all_kid!=null && all_kid.length>0)
     {
@@ -233,18 +235,21 @@ Page({
   },
   bind_view_long_tap:function(e)//长按
   {
+    lont_tap_lock = true;//防止长按抬起时触发tap导致打开查看引用串窗口
     LongTapID = this.data.list[e.currentTarget.id].id;
     this.setData({ShowMenu:false});
   },
   MenuChange:function(e)//关闭下部菜单
   {
     this.setData({ShowMenu:true});
+    lont_tap_lock=false;//解除tap锁
   },
   th_reply:function(e)//引用指定No.
   {
     wx.navigateTo({url: '../new/new?mode=2&revid=' + page_id + "&rev_text=>>No." + LongTapID + "\n"});
     LongTapID = "";
     this.setData({ShowMenu:true});
+    lont_tap_lock=false;//解除tap锁
   },
   add_reply_list:function(e)//添加到引用列表
   {
@@ -254,6 +259,7 @@ Page({
       temp += ">>No." + LongTapID + "\n";
       wx.setStorageSync('ReplyIDList', temp);
       this.setData({ShowMenu:true});
+      lont_tap_lock=false;//解除tap锁
     }
   },
   th_report:function(e)//举报这个回复
@@ -261,6 +267,7 @@ Page({
     wx.navigateTo({url: '../new/new?mode=3&revid=18&rev_text=>>No.'+LongTapID});
     LongTapID = "";
     this.setData({ShowMenu:true});
+    lont_tap_lock=false;//解除tap锁
   },
   onPullDownRefresh: function()//下拉刷新
   {

@@ -167,6 +167,7 @@ Page({
               this.setData({txt_value:e.rev_text});
             //wx.setStorageSync('String', Object/String)
         }
+        all_text = this.data.txt_value;
         if(e.mode==3)e.mode=1;
         resto_id = e.revid;
         re_mode  = e.mode;

@@ -24,7 +24,6 @@
 </modal>
 <!--主列表-->
 <view class="container">
-
   <view class="item" wx:for="{{list}}" id="{{item.id}}" bindtap="bind_view_tap" wx:key="b_list">
     <view class="text">
       <view class="b1">
@@ -32,7 +31,6 @@
         <view class="{{item.admin == 1?'xuankuhongming':''}}">{{item.userid}}</view>
         <view class="stime">{{item.now}}</view>
       </view>
-      
       <view class="b2">
         <view class="title" wx:if="{{item.title!='无标题'}}" >{{item.title}}</view>
         <view class="uname" wx:if="{{item.name!='无名氏'}}" >{{item.name}}</view>
