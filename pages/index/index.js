@@ -197,20 +197,15 @@ Page(
   },
   bind_pic_load: function(e)//图片加载完成
   {
-    var list = this.data.list;
     var temp_width = 0;
     var temp_height = 0;
     var temp_ratio = 0.0;
     temp_width = sys_width/2;//要缩放到的图片宽度
     temp_ratio = temp_width/e.detail.width;//计算缩放比例
     temp_height = e.detail.height*temp_ratio;//计算缩放后的高度
-    list[e.target.id].img_height = parseInt(temp_height);
-    list[e.target.id].img_width  = parseInt(temp_width);
-    this.setData({list:list});
-    //console.log(list[e.target.id].img_height + "  " + list[e.target.id].img_width);
-    //detail
-    //console.log(e);
-    //this.setData({list[e.detail.id].img_height:e.detail.height});
+    this.data.list[e.target.id].img_height = parseInt(temp_height);
+    this.data.list[e.target.id].img_width  = parseInt(temp_width);
+    this.setData({list:this.data.list});
   },
   onPullDownRefresh: function()//下拉刷新
   {

@@ -14,7 +14,7 @@ var lont_tap_lock = false;
 
 function GetQuoteBody(all_kid,that)
 {
-  console.log(all_kid);
+  //console.log(all_kid);
   for(let i=0;i<all_kid.length;i++)
   {
     AdaoAPI.api_request(
@@ -22,8 +22,7 @@ function GetQuoteBody(all_kid,that)
       appInstance.globalData.get_thread_url + "&id=" + all_kid[i],
       {},
       function(res,that){
-        console.log(res);
-
+        //console.log(res);
         var q_list = that.data.q_list;
         if(res.data=="thread不存在")
         {
@@ -72,7 +71,7 @@ function GetQuote(kid)
   {
     out_data.html = kid;
   }
-  console.log(out_data);
+  //console.log(out_data);
   return out_data;
 }
 //获取回复
@@ -305,20 +304,15 @@ Page({
   },
   bind_pic_load: function(e)//图片载入完成
   {
-    var list = this.data.list;
     var temp_width = 0;
     var temp_height = 0;
     var temp_ratio = 0.0;
     temp_width = sys_width/2;//要缩放到的图片宽度
     temp_ratio = temp_width/e.detail.width;//计算缩放比例
     temp_height = e.detail.height*temp_ratio;//计算缩放后的高度
-    list[e.target.id].img_height = parseInt(temp_height);
-    list[e.target.id].img_width  = parseInt(temp_width);
-    this.setData({list:list});
-    //console.log(list[e.target.id].img_height + "  " + list[e.target.id].img_width);
-    //detail
-    //console.log(e);
-    //this.setData({list[e.detail.id].img_height:e.detail.height});
+    this.data.list[e.target.id].img_height = parseInt(temp_height);
+    this.data.list[e.target.id].img_width  = parseInt(temp_width);
+    this.setData({list:this.data.list});
   },
   tap_nw : function()//回复本串
   {
