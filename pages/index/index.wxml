@@ -3,6 +3,9 @@
 <!--遮罩-->
 <view style="width:100%;height:100%;" class="box" hidden="{{!open}}" bindtap="tap_ch" catchtouchmove="f_touch">
 </view>
+<loading hidden="{{!isloading}}">
+加载中...
+</loading>
 <!--板块选择-->
 <view class="left_menu {{open ? 'menu_open' : ''}}">
   <scroll-view class="fliststl" scroll-y="true" catchscroll="f_touch">

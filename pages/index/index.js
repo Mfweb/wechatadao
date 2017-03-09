@@ -147,6 +147,7 @@ Page(
     default_page:1,//跳转页面默认值
     f_image:"",//首页图片
     bot_text:"",
+    isloading:false,
   },
   
   onLoad:function()
@@ -183,7 +184,9 @@ Page(
   bind_view_tap: function(e)//单击
   {
     if(e.target.id!="")return;
+    this.setData({isloading:true});
     wx.navigateTo({url: '../p/p?id=' + e['currentTarget'].id});
+    this.setData({isloading:false});
   },
 
   bind_pic_tap: function(e)//单击图片

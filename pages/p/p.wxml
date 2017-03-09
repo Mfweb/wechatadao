@@ -57,7 +57,7 @@
 <view style="width:100%;height:100%;" class="box" hidden="{{!open}}" bindtap="tap_ch"></view>
 <!--显示引用串-->
 <view class="container q_window" hidden="{{!open}}">
-    <view wx:for="{{q_list}}" wx:key="q_key" id="{{index}}" class="q_list_c">
+    <view wx:for="{{q_list}}" wx:key="q_key" id="{{item.id}}" class="q_list_c" bindtap="bind_qd_tap">
       <view class="text">
         <view class="b1">
           <view class="cid">{{item.id}}</view>

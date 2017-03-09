@@ -89,6 +89,11 @@ function GetList(that)
     appInstance.globalData.thread_url,
     {id : page_id,page : page},
     function(res){//success
+      if(res.data=="该主题不存在")
+      {
+        that.setData({bot_text:"该主题不存在"});
+        return;
+      }
       var list = that.data.list;
       if(list.length == 0)//第一页 添加正文内容
       {
@@ -231,6 +236,11 @@ Page({
       GetQuoteBody(all_kid,that);
       this.setData({open:true});
     }
+  },
+  bind_qd_tap: function(e)//打开引用的串
+  {
+    if(e['currentTarget'].id=="ID不存在")return;
+    wx.navigateTo({url: '../p/p?id=' + e['currentTarget'].id});
   },
   bind_view_long_tap:function(e)//长按
   {
