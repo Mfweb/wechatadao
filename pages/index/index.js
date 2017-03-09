@@ -73,6 +73,7 @@ function GetList(that)
 /*获得板块列表*/
 function GetFList(that)
 {
+  that.setData({loading_f:true});
   AdaoAPI.api_request(
     "",
     appInstance.globalData.get_forum_url,
@@ -101,8 +102,10 @@ function GetFList(that)
         icon: 'success',
         duration: 500
       })
-    },null
-  );
+    },
+    function(that){
+      that.setData({loading_f:false});
+    },that);
 }
 
 /*获得首页图片*/
@@ -148,6 +151,7 @@ Page(
     f_image:"",//首页图片
     bot_text:"",
     isloading:false,
+    loading_f:false
   },
   
   onLoad:function()
@@ -311,7 +315,13 @@ Page(
     })
   },
   f_touch:function()
-{
-  console.log(1);
-}
+  {
+    console.log(1);
+  },
+  bind_ref_bk:function()//刷新板块列表
+  {
+    var that = this;
+    this.setData({flist:[]});
+    GetFList(that);
+  }
 })

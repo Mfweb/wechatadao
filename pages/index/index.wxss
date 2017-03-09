@@ -66,3 +66,21 @@
 .flist_f:active{
   background: #C4C4C4;
 }
+.ref_but{
+  width: 40px;
+  height: 40px;
+  z-index: 10;
+  position:fixed;
+}
+.ref_now{
+  animation: btnRotate 1.5s linear infinite;
+
+}
+@keyframes btnRotate{
+  0%{
+      -webkit-transform: rotateZ(0deg);
+    }
+  100%{
+      -webkit-transform: rotateZ(360deg);
+    }
+}

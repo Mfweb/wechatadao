@@ -8,6 +8,7 @@
 </loading>
 <!--板块选择-->
 <view class="left_menu {{open ? 'menu_open' : ''}}">
+  <image class="ref_but {{loading_f==true?'ref_now':''}}" src="../../icons/re.png" catchtap="bind_ref_bk"></image>
   <scroll-view class="fliststl" scroll-y="true" catchscroll="f_touch">
     <image class="f_image" src="{{f_image}}" id="{{f_image}}" bindtap="max_picture" mode="aspectFit"></image>
     <view wx:for="{{flist}}" wx:key="f_list" class="f_list_all">
