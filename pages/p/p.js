@@ -12,22 +12,51 @@ var post_run = false;//防止重复拉取
 var LongTapID = "";//长按选择的ID
 var lont_tap_lock = false;
 
-function GetQuoteBody(all_kid,that)
+//先当做主串拉取 如果失败就当做回复拉取
+function GetQuoteOne(kindex,that,mode = 0)
 {
-  //console.log(all_kid);
-  for(let i=0;i<all_kid.length;i++)
+  var lthat = {that:that,kindex:kindex};
+  if(mode==0)
   {
     AdaoAPI.api_request(
       "",
-      appInstance.globalData.get_thread_url + "&id=" + all_kid[i],
+      appInstance.globalData.thread_url,
+      {id : that.data.q_list[kindex].id,page : 1},
+      function(res,that){//success
+        if(res.data=="该主题不存在")//不是主串 拉取串内容
+          GetQuoteOne(that.kindex,that.that,1);
+        else
+        {
+          var q_list = that.that.data.q_list;
+          res.data.html = WxParse.wxParse('item', 'html', res.data.content, that,null);
+          res.data.sid = res.data.id;
+          if(res.data.img!="")
+          {
+            res.data.img = res.data.img + res.data.ext;
+            res.data.thumburl = appInstance.globalData.thumb_img_url;
+          }
+          q_list[that.kindex] = res.data;
+          that.that.setData({q_list:q_list});
+        }
+      },
+      function(res){//fail
+        console.log("error");
+      },
+      null,lthat);
+  }
+  else
+  {
+    AdaoAPI.api_request(
+      "",
+      appInstance.globalData.get_thread_url + "&id=" + that.data.q_list[kindex].id,
       {},
-      function(res,that){
+      function(res,that){//success
         //console.log(res);
-        var q_list = that.data.q_list;
+        var q_list = that.that.data.q_list;
         if(res.data=="thread不存在")
         {
           var temp = {id:"ID不存在"};
-          q_list.push(temp);
+          q_list[that.kindex] = temp;
         }
         else
         {
@@ -37,14 +66,31 @@ function GetQuoteBody(all_kid,that)
             res.data.img = res.data.img + res.data.ext;
             res.data.thumburl = appInstance.globalData.thumb_img_url;
           }
-          q_list.push(res.data);
+          q_list[that.kindex] = res.data;
         }
-        that.setData({q_list:q_list});
+        that.that.setData({q_list:q_list});
       },
-      function(res){
+      function(res){//fail
         console.log("error");
       },
-      null,that);
+      null,lthat);
+  }
+}
+//获取引用串 
+function GetQuoteBody(all_kid,that,mode = 1)
+{
+  //console.log(all_kid);
+  var temp_q_list=[];
+  for(let i=0;i<all_kid.length;i++)
+  {
+    var temp = {id:all_kid[i]};
+    temp_q_list.push(temp);
+   // GetQuoteOne(i,that);
+  }
+  that.setData({q_list:temp_q_list});
+  for(let i=0;i<all_kid.length;i++)
+  {
+    GetQuoteOne(i,that);//拉取内容
   }
 }
 //引用串高亮
@@ -218,12 +264,10 @@ Page({
     var that = this;
     GetList(that);
   },
-
   onShow:function()
   {
 
   },
-
   bind_view_tap: function(e)//点击查看引用串内容
   {
     //console.log(e.currentTarget.id);
@@ -239,7 +283,7 @@ Page({
   },
   bind_qd_tap: function(e)//打开引用的串
   {
-    if(e['currentTarget'].id=="ID不存在")return;
+    if(e['currentTarget'].id=="")return;
     wx.navigateTo({url: '../p/p?id=' + e['currentTarget'].id});
   },
   bind_view_long_tap:function(e)//长按

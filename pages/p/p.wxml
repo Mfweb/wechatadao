@@ -57,7 +57,7 @@
 <view style="width:100%;height:100%;" class="box" hidden="{{!open}}" bindtap="tap_ch"></view>
 <!--显示引用串-->
 <view class="container q_window" hidden="{{!open}}">
-    <view wx:for="{{q_list}}" wx:key="q_key" id="{{item.id}}" class="q_list_c" catchtap="bind_qd_tap">
+    <view wx:for="{{q_list}}" wx:key="q_key" id="{{item.sid}}" class="q_list_c" catchtap="bind_qd_tap">
       <view class="text">
         <view class="b1">
           <view class="cid">{{item.id}}</view>
@@ -72,10 +72,13 @@
         <template is="wxParse" wx:if="{{item.id!='ID不存在'}}" data="{{wxParseData:item.html.nodes}}"/>
       </view>
 
-      <view style="width:100%;" wx:if="{{item.id!='ID不存在' && item.img!=''}}"><!--不加这一层可能导致点击图片周围空白区域无法触发tap-->
-        <image style="height:{{item.img_height}}px;width:{{item.img_width}}px;" id="{{index}}" class="img" src="{{item.thumburl}}{{item.img}}" mode="aspectFit" catchtap="bind_pic_tap"></image>
+      <view wx:if="{{item.id!='ID不存在' && item.img!=''}}"><!--不加这一层可能导致点击图片周围空白区域无法触发tap-->
+        <image id="{{index}}" class="img" src="{{item.thumburl}}{{item.img}}" mode="aspectFit" catchtap="bind_pic_tap">loading</image>
       </view>
-
+      <view class="b1" wx:if="{{item.replyCount>=0}}">
+        <view class="readcount">回应：{{item.replyCount}}</view>
+        <view class="sage" hidden="{{item.sage==0?true:false}}">SAGE</view>
+      </view>
       <view class="v_hr"></view>
     </view>
 </view>
