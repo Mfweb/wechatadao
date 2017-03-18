@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/p/p",
     "pages/new/new",
-    "pages/cookie_manager/cookie_manager"
+    "pages/cookie_manager/cookie_manager",
+    "pages/favorite_manager/favorite_manager"
   ],
   "window":{
     "backgroundTextStyle":"light",

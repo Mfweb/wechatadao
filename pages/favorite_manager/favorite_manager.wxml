@@ -1,0 +1,37 @@
+<!--index.wxml-->
+<import src="../../wxParse/wxParse.wxml"/>
+<loading hidden="{{!isloading}}">
+加载中...
+</loading>
+<!--收藏列表-->
+<view class="container">
+  <view class="item" wx:for="{{list}}" id="{{item.id}}" bindtap="bind_view_tap" wx:key="b_list">
+    <view class="text">
+      <view class="b1">
+        <view class="cid">No.{{item.id}}</view>
+        <view class="{{item.admin == 1?'xuankuhongming':''}}">{{item.userid}}</view>
+        <view class="stime">{{item.now}}</view>
+      </view>
+      <view class="b2">
+        <view class="title" wx:if="{{item.title!='无标题'}}" >{{item.title}}</view>
+        <view class="uname" wx:if="{{item.name!='无名氏'}}" >{{item.name}}</view>
+      </view>
+      <template is="wxParse" data="{{wxParseData:item.html.nodes}}"/>
+    </view>
+    <view style="width:100%;" wx:if="{{item.img!=''}}"><!--不加这一层可能导致点击图片周围空白区域无法触发tap-->
+      <image style="height:{{item.img_height}}px;width:{{item.img_width}}px;" id="{{index}}" class="img" src="{{item.thumburl}}{{item.img}}" mode="aspectFit" bindtap="bind_pic_tap" bindload="bind_pic_load">loading</image>
+    </view>
+    <view class="v_hr"></view>
+  </view>
+    <view class="list_bot">
+      {{bot_text}}
+    </view>
+</view>
+
+<!--底部菜单-->
+<action-sheet hidden="{{!ShowMenu}}" bindchange="MenuChange">
+    <block>
+        <action-sheet-item bindtap="tap_cookie">删除收藏</action-sheet-item>
+    </block>
+    <action-sheet-cancel>取消</action-sheet-cancel>
+</action-sheet>

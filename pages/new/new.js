@@ -14,7 +14,7 @@ function adao_get_cookie()
 {
     var temp_cookie = '0';
     wx.request({
-    url:appInstance.globalData.get_cookie_url,
+    url:appInstance.globalData.url.get_cookie_url,
     method: 'GET',
     success: function(res){
         console.log(res);
@@ -89,9 +89,10 @@ function A_Send(that,resto,content,file=null,water="true")
     return;
   }
   that.setData({UploadDisable:true,hidden:false});
+  var post_url = appInstance.globalData.url.host + (re_mode==1?appInstance.globalData.url.new_thread_url:appInstance.globalData.url.new_reply_url);
   if(file==null)//无图
   {
-    AdaoAPI.api_request(user_cookie,re_mode==1?appInstance.globalData.new_thread_url:appInstance.globalData.new_reply_url,
+    AdaoAPI.api_request(user_cookie,post_url,
     {
       resto:re_mode==1?null:resto,
       fid:re_mode==2?null:resto,
@@ -105,7 +106,7 @@ function A_Send(that,resto,content,file=null,water="true")
   }
   else //有图
   {
-    AdaoAPI.api_uploadfile(user_cookie,re_mode==1?appInstance.globalData.new_thread_url:appInstance.globalData.new_reply_url,
+    AdaoAPI.api_uploadfile(user_cookie,post_url,
     {
       resto:re_mode==1?null:resto,
       fid:re_mode==2?null:resto,

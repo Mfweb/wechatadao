@@ -5,8 +5,6 @@ var page_id   = -1;//板块号
 var page_in   = 1;//输入的页数
 var appInstance = getApp();
 var pw_run = false;//防止下拉刷新清空列表的时候触发上拉加载
-var sys_height = 0;//屏幕尺寸
-var sys_width  = 0;
 var post_run = false;//防止重复请求
 
 /*修改标题为当前板块*/
@@ -33,9 +31,9 @@ function GetList(that)
   that.setData({bot_text:"正在加载.."});
   AdaoAPI.api_request(
     "",
-    appInstance.globalData.show_forum_url,
+    appInstance.globalData.url.host + appInstance.globalData.url.show_forum_url,
     {id : page_id,page : page},
-    function(res){//success
+    function(res,that){//success
       var list = that.data.list;
       if(res.data.length > 0)
       {
@@ -44,7 +42,7 @@ function GetList(that)
           if(res.data[i].img != "")
           {
             res.data[i].img = res.data[i].img + res.data[i].ext;
-            res.data[i].thumburl = appInstance.globalData.thumb_img_url;
+            res.data[i].thumburl = res.data[i].ext==".gif"?appInstance.globalData.url.full_img_url:appInstance.globalData.url.thumb_img_url;
           }
           res.data[i].html = WxParse.wxParse('item', 'html', res.data[i].content, that,null);
           res.data[i].img_height = 0;
@@ -56,18 +54,18 @@ function GetList(that)
       }
       that.setData({bot_text:list.length+",上拉继续加载.."});
     },
-    function(res){//fail
+    function(res,that){//fail
       wx.showToast({
         title: '加载失败',
         icon: 'success',
         duration: 1500
-      })
+      });
+      that.setData({bot_text:"加载失败"});
     },
     function(){//finish
       pw_run = false;
       post_run = false;
-    }
-  );
+    },that);
 }
 
 /*获得板块列表*/
@@ -76,7 +74,7 @@ function GetFList(that)
   that.setData({loading_f:true});
   AdaoAPI.api_request(
     "",
-    appInstance.globalData.get_forum_url,
+    appInstance.globalData.url.host + appInstance.globalData.url.get_forum_url,
     null,
     function(res){//success
       var list_temp = [];//板块列表
@@ -113,7 +111,7 @@ function GetMainPicture(that)
 {
   AdaoAPI.api_request(
     "",
-    appInstance.globalData.top_image_url,
+    appInstance.globalData.url.top_image_url,
     null,
     function(res){//success
       if(res.data!="error")
@@ -151,14 +149,12 @@ Page(
     f_image:"",//首页图片
     bot_text:"",
     isloading:false,
-    loading_f:false
+    loading_f:false,
+    ShowMenu:false,
   },
   
   onLoad:function()
   {
-    var res = wx.getSystemInfoSync();
-    sys_width  = res.windowWidth;
-    sys_height = res.windowHeight;
     var that = this;
     GetMainPicture(that);
     GetFList(that);
@@ -196,9 +192,9 @@ Page(
   bind_pic_tap: function(e)//单击图片
   {
 
-    var pr_imgs = [appInstance.globalData.full_img_url + this.data.list[e['currentTarget'].id].img];
+    var pr_imgs = [appInstance.globalData.url.full_img_url + this.data.list[e['currentTarget'].id].img];
     wx.previewImage({
-      current: appInstance.globalData.thumb_img_url + this.data.list[e['currentTarget'].id].img,
+      current: appInstance.globalData.url.thumb_img_url + this.data.list[e['currentTarget'].id].img,
       urls:pr_imgs
     })
   },
@@ -207,7 +203,7 @@ Page(
     var temp_width = 0;
     var temp_height = 0;
     var temp_ratio = 0.0;
-    temp_width = sys_width/2;//要缩放到的图片宽度
+    temp_width = appInstance.globalData.sysinfo.sys_width/2;//要缩放到的图片宽度
     temp_ratio = temp_width/e.detail.width;//计算缩放比例
     temp_height = e.detail.height*temp_ratio;//计算缩放后的高度
     this.data.list[e.target.id].img_height = parseInt(temp_height);
@@ -302,11 +298,11 @@ Page(
   {
     wx.navigateTo({url: '../new/new?mode=1&revid=' + page_id});
   },
-  tap_ma: function()
+  tap_ma: function()//管理工具
   {
-    wx.navigateTo({url: '../cookie_manager/cookie_manager'});
+    this.setData({ShowMenu:true});
   },
-  max_picture : function(res)
+  max_picture : function(res)//查看图片大图
   {
     var pr_imgs = [res.currentTarget.id];
     wx.previewImage({
@@ -316,12 +312,27 @@ Page(
   },
   f_touch:function()
   {
-    console.log(1);
+    //console.log(1);
   },
   bind_ref_bk:function()//刷新板块列表
   {
     var that = this;
     this.setData({flist:[]});
     GetFList(that);
-  }
+    GetMainPicture(that);
+  },
+  tap_cookie:function()//饼干管理器
+  {
+    wx.navigateTo({url: '../cookie_manager/cookie_manager'});
+    this.setData({ShowMenu:false});
+  },
+  tap_favorite:function()//收藏管理器
+  {
+    wx.navigateTo({url: '../favorite_manager/favorite_manager'});
+    this.setData({ShowMenu:false});
+  },
+  MenuChange:function(e)//关闭下部菜单
+  {
+    this.setData({ShowMenu:false});
+  },
 })

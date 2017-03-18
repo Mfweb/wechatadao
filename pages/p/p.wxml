@@ -48,7 +48,7 @@
 <!--底部icon-->
 <view class="footer">
   <image bindtap="tap_report" mode="aspectFit" class="icons" src="../../icons/110.png"></image>
-  <image bindtap="" mode="aspectFit" class="icons" src="../../icons/star.png"></image>
+  <image bindtap="tap_feed" mode="aspectFit" class="icons" src="{{staricon}}"></image>
   <image bindtap="tap_sl" mode="aspectFit" class="icons" src="../../icons/goto.png"></image>
   <image bindtap="tap_nw" mode="aspectFit" class="icons" src="../../icons/new.png"></image>
 </view>

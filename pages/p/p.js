@@ -6,11 +6,95 @@ var page_in = -1;//输入要跳转的页面
 var last_length = 0;
 var appInstance = getApp();
 var pw_run = false;//防止下拉刷新清空列表的时候触发上拉加载
-var sys_height = 0;//系统屏幕尺寸
-var sys_width  = 0;
 var post_run = false;//防止重复拉取
 var LongTapID = "";//长按选择的ID
 var lont_tap_lock = false;
+var isfeed = false;
+function DelFeed(fid,that)
+{
+  if(appInstance.globalData.userinfo.user_openid == null)
+  {
+    wx.showToast({
+      title: '获取openid失败',
+      icon: 'success',
+      duration: 500
+    });
+    return;
+  }
+  AdaoAPI.api_request(
+    "",
+    appInstance.globalData.url.host + appInstance.globalData.url.del_feed_url + "&uuid=" + appInstance.globalData.userinfo.user_openid + "&tid=" + fid,
+    null,
+    function(res,that){//success
+      if(res.data == "取消订阅成功!")
+      {
+        wx.showToast({
+          title: '取消订阅成功',
+          icon: 'success',
+          duration: 500
+        });
+        appInstance.get_feed();
+        that.setData({staricon:"../../icons/star.png"});
+        isfeed = false;
+      }
+      else
+      {
+        wx.showToast({
+          title: '取消订阅失败！',
+          icon: 'success',
+          duration: 500
+        });
+      }
+    },
+    function(res,that){//fail
+      console.log("fail" + res);
+    },
+    null,
+    that);
+}
+//添加到收藏
+function AddFeed(fid,that)
+{
+  if(appInstance.globalData.userinfo.user_openid == null)
+  {
+    wx.showToast({
+      title: '获取openid失败',
+      icon: 'success',
+      duration: 500
+    });
+    return;
+  }
+  AdaoAPI.api_request(
+    "",
+    appInstance.globalData.url.host + appInstance.globalData.url.add_feed_url + "&uuid=" + appInstance.globalData.userinfo.user_openid + "&tid=" + fid,
+    null,
+    function(res,that){//success
+      if(res.data == "订阅大成功→_→")
+      {
+        wx.showToast({
+          title: '订阅大成功',
+          icon: 'success',
+          duration: 500
+        });
+        appInstance.get_feed();
+        that.setData({staricon:"../../icons/star2.png"});
+        isfeed = true;
+      }
+      else
+      {
+        wx.showToast({
+          title: "订阅大失败",
+          icon: 'success',
+          duration: 500
+        });
+      }
+    },
+    function(res,that){//fail
+      console.log(res);
+    },
+    null,
+    that);
+}
 
 //先当做主串拉取 如果失败就当做回复拉取
 function GetQuoteOne(kindex,that,mode = 0)
@@ -20,7 +104,7 @@ function GetQuoteOne(kindex,that,mode = 0)
   {
     AdaoAPI.api_request(
       "",
-      appInstance.globalData.thread_url,
+      appInstance.globalData.url.host + appInstance.globalData.url.thread_url,
       {id : that.data.q_list[kindex].id,page : 1},
       function(res,that){//success
         if(res.data=="该主题不存在")//不是主串 拉取串内容
@@ -33,7 +117,7 @@ function GetQuoteOne(kindex,that,mode = 0)
           if(res.data.img!="")
           {
             res.data.img = res.data.img + res.data.ext;
-            res.data.thumburl = appInstance.globalData.thumb_img_url;
+            res.data.thumburl = res.data.ext==".gif"?appInstance.globalData.url.full_img_url:appInstance.globalData.url.thumb_img_url;
           }
           q_list[that.kindex] = res.data;
           that.that.setData({q_list:q_list});
@@ -48,7 +132,7 @@ function GetQuoteOne(kindex,that,mode = 0)
   {
     AdaoAPI.api_request(
       "",
-      appInstance.globalData.get_thread_url + "&id=" + that.data.q_list[kindex].id,
+      appInstance.globalData.url.host + appInstance.globalData.url.get_thread_url + "&id=" + that.data.q_list[kindex].id,
       {},
       function(res,that){//success
         //console.log(res);
@@ -64,7 +148,7 @@ function GetQuoteOne(kindex,that,mode = 0)
           if(res.data.img != "")
           {
             res.data.img = res.data.img + res.data.ext;
-            res.data.thumburl = appInstance.globalData.thumb_img_url;
+            res.data.thumburl = appInstance.globalData.url.thumb_img_url;
           }
           q_list[that.kindex] = res.data;
         }
@@ -132,9 +216,9 @@ function GetList(that)
     that.setData({bot_text:"Loading..."});
   AdaoAPI.api_request(
     "",
-    appInstance.globalData.thread_url,
+    appInstance.globalData.url.host + appInstance.globalData.url.thread_url,
     {id : page_id,page : page},
-    function(res){//success
+    function(res,that){//success
       if(res.data=="该主题不存在")
       {
         that.setData({bot_text:"该主题不存在"});
@@ -165,7 +249,7 @@ function GetList(that)
           if(res.data.img!="")
           {
             header.img = res.data.img + res.data.ext;
-            header.thumburl = appInstance.globalData.thumb_img_url;
+            header.thumburl = appInstance.globalData.url.thumb_img_url;
           }
           else
           {
@@ -193,7 +277,7 @@ function GetList(that)
           if(res.data.replys[i].img != "")
           {
             res.data.replys[i].img = res.data.replys[i].img + res.data.replys[i].ext;
-            res.data.replys[i].thumburl = appInstance.globalData.thumb_img_url;
+            res.data.replys[i].thumburl = res.data.replys[i].ext==".gif"?appInstance.globalData.url.full_img_url:appInstance.globalData.url.thumb_img_url;
           }
           let temp_html = GetQuote(res.data.replys[i].content);
           res.data.replys[i].content = temp_html.html;//正则高亮所有引用串号
@@ -224,19 +308,19 @@ function GetList(that)
       //console.log(list.length);
       that.setData({bot_text:(list.length-1) + "/" + list[0].replyCount});
     },
-    function(res){//fail
+    function(res,that){//fail
       that.setData({bot_text:"error"});
         wx.showToast({
           title: '加载失败',
           icon: 'success',
           duration: 500
         });
+        that.setData({bot_text:"加载失败"});
     },
     function(){//finish
       pw_run = false;
       post_run = false;
-    }
-  );
+    },that);
 }
 
 Page({
@@ -250,18 +334,28 @@ Page({
   default_page:1,//跳转页面默认值
   ShowMenu:true,
   open:false,
-  q_list:[]
+  q_list:[],
+  staricon:"../../icons/star.png"
  },
  
   onLoad:function(e)
   {
-    var res = wx.getSystemInfoSync();
-    sys_width  = res.windowWidth;
-    sys_height = res.windowHeight;
     page_id = e.id;
     page = 1;
     last_length = 0;
     var that = this;
+    if(appInstance.globalData.userinfo.user_openid == null)//获取openid
+      appInstance.get_user_openid();
+    var all_feed = wx.getStorageSync('FeedObj');
+    for(let i=0;i<all_feed.length;i++)
+    {
+      if(all_feed[i].id == page_id)
+      {
+        this.setData({staricon:"../../icons/star2.png"});
+        isfeed = true;
+        break;
+      }
+    }
     GetList(that);
   },
   onShow:function()
@@ -299,6 +393,7 @@ Page({
   },
   th_reply:function(e)//引用指定No.
   {
+    if(LongTapID == "")return;
     wx.navigateTo({url: '../new/new?mode=2&revid=' + page_id + "&rev_text=>>No." + LongTapID + "\n"});
     LongTapID = "";
     this.setData({ShowMenu:true});
@@ -350,9 +445,9 @@ Page({
       img_url = this.data.q_list[e['currentTarget'].id].img;
     else
       img_url = this.data.list[e['currentTarget'].id].img;
-    var pr_imgs = [appInstance.globalData.full_img_url + img_url];
+    var pr_imgs = [appInstance.globalData.url.full_img_url + img_url];
     wx.previewImage({
-      current: appInstance.globalData.thumb_img_url + img_url,
+      current: appInstance.globalData.url.thumb_img_url + img_url,
       urls:pr_imgs
     })
   },
@@ -361,7 +456,7 @@ Page({
     var temp_width = 0;
     var temp_height = 0;
     var temp_ratio = 0.0;
-    temp_width = sys_width/2;//要缩放到的图片宽度
+    temp_width = appInstance.globalData.sysinfo.sys_width/2;//要缩放到的图片宽度
     temp_ratio = temp_width/e.detail.width;//计算缩放比例
     temp_height = e.detail.height*temp_ratio;//计算缩放后的高度
     this.data.list[e.target.id].img_height = parseInt(temp_height);
@@ -425,9 +520,13 @@ Page({
     else
       page_in = -1;
   },
-  tap_quote:function(res)
+  tap_feed:function()//收藏
   {
-    console.log(res);
+    var that = this;
+    if(isfeed)//如果已经订阅了 就取消订阅
+      DelFeed(page_id,that);
+    else
+      AddFeed(page_id,that);
   },
   f_touch:function()
   {
