@@ -65,6 +65,7 @@ function GetList(that)
     function(){//finish
       pw_run = false;
       post_run = false;
+      wx.stopPullDownRefresh();
     },that);
 }
 
@@ -215,7 +216,6 @@ Page(
     pw_run = true;
     var that = this;
     refGet(that);
-    wx.stopPullDownRefresh()
   },
 
   onReachBottom: function ()//上拉加载更多

@@ -10,8 +10,12 @@ var post_run = false;//防止重复拉取
 var LongTapID = "";//长按选择的ID
 var lont_tap_lock = false;
 var isfeed = false;
+var isfeeding = false;
+
 function DelFeed(fid,that)
 {
+  if(isfeeding)return;
+  isfeeding = true;
   if(appInstance.globalData.userinfo.user_openid == null)
   {
     wx.showToast({
@@ -49,12 +53,14 @@ function DelFeed(fid,that)
     function(res,that){//fail
       console.log("fail" + res);
     },
-    null,
+    function(){isfeeding=false;},
     that);
 }
 //添加到收藏
 function AddFeed(fid,that)
 {
+  if(isfeeding)return;
+  isfeeding = true;
   if(appInstance.globalData.userinfo.user_openid == null)
   {
     wx.showToast({
@@ -92,7 +98,7 @@ function AddFeed(fid,that)
     function(res,that){//fail
       console.log(res);
     },
-    null,
+    function(){isfeeding=false;},
     that);
 }
 
@@ -283,6 +289,8 @@ function GetList(that)
           res.data.replys[i].content = temp_html.html;//正则高亮所有引用串号
           res.data.replys[i].all_kid = temp_html.all_kid;
           res.data.replys[i].html = WxParse.wxParse('item', 'html', res.data.replys[i].content, that,null);
+          res.data.replys[i].img_height = 0;
+          res.data.replys[i].img_width = 0;
           list.push(res.data.replys[i]);
         }
         that.setData({list : list});
@@ -320,6 +328,7 @@ function GetList(that)
     function(){//finish
       pw_run = false;
       post_run = false;
+      wx.stopPullDownRefresh();
     },that);
 }
 
@@ -429,7 +438,6 @@ Page({
     });
     var that = this;
     GetList(that);
-    wx.stopPullDownRefresh();
   },
 
   onReachBottom: function ()//上拉加载更多
@@ -461,6 +469,7 @@ Page({
     temp_height = e.detail.height*temp_ratio;//计算缩放后的高度
     this.data.list[e.target.id].img_height = parseInt(temp_height);
     this.data.list[e.target.id].img_width  = parseInt(temp_width);
+    //console.log(e.target.id + " " + this.data.list[e.target.id].img_height + ":" + this.data.list[e.target.id].img_width);
     this.setData({list:this.data.list});
   },
   tap_nw : function()//回复本串

@@ -16,6 +16,8 @@ function GetSList(that)
       temp_feed[i].img = temp_feed[i].img + temp_feed[i].ext;
       temp_feed[i].thumburl = temp_feed[i].ext==".gif"?appInstance.globalData.url.full_img_url:appInstance.globalData.url.thumb_img_url;
     }
+    temp_feed[i].img_height = 0;
+    temp_feed[i].img_width = 0;
   }
   that.setData({list:temp_feed});
 }
