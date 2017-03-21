@@ -255,7 +255,7 @@ function GetList(that)
           if(res.data.img!="")
           {
             header.img = res.data.img + res.data.ext;
-            header.thumburl = appInstance.globalData.url.thumb_img_url;
+            header.thumburl = res.data.ext==".gif"?appInstance.globalData.url.full_img_url:appInstance.globalData.url.thumb_img_url;
           }
           else
           {

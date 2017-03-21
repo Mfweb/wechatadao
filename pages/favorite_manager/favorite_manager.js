@@ -4,7 +4,7 @@ var appInstance = getApp();
 var pw_run = false;//防止下拉刷新清空列表的时候触发上拉加载
 var post_run = false;//防止重复请求
 var page = 1;
-
+/* 从本地存储拉取订阅 */
 function GetSList(that)
 {
   var temp_feed = wx.getStorageSync('FeedObj');
@@ -21,7 +21,7 @@ function GetSList(that)
   }
   that.setData({list:temp_feed});
 }
-/*获取订阅串*/
+/*获取订阅串 force:强制从服务器拉取*/
 function GetList(that,force=false)
 {
   if(force)
@@ -64,14 +64,13 @@ Page(
   {
     if(appInstance.globalData.userinfo.user_openid == null)//获取openid
       appInstance.get_user_openid();
-  },
-
-  onShow:function(e)
-  {
     var that = this;
     GetList(that);
   },
+  onShow:function(e)
+  {
 
+  },
   bind_view_tap: function(e)//单击
   {
     if(e.target.id!="")return;
