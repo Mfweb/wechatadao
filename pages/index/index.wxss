@@ -49,6 +49,7 @@
 }
 .f_list_all{
   width: 100%;
+  overflow:hidden;
 }
 .flist_group{/*板块group*/
   /*margin-top: 10px;*/
@@ -69,7 +70,7 @@
 .ref_but{
   width: 40px;
   height: 40px;
-  z-index: 10;
+  z-index: 999;
   position:fixed;
 }
 .ref_now{

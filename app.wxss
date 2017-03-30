@@ -112,13 +112,19 @@
     margin: 0 auto;
     text-align: center;
     color: #00ccff;
+    margin-bottom: 45px;
 }
 .bequote{/*引用*/
   color:#9BCD9B;
   background-color: #EAEAEA;
   font-size: 30rpx;
-  width: 220rpx;
+  float: left;
   margin-top: 1px;
+}
+.be_br{
+  display: flex;
+  float: none;
+  width: 100%; 
 }
 .input_cs{
   border: 1px solid #FF8000;
@@ -132,4 +138,8 @@
   background:#000;
   opacity:0.7;
   z-index:1;
+}
+.loading_gif{
+    width: 24px;
+    height: 24px;
 }

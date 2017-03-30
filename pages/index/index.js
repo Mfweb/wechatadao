@@ -47,6 +47,7 @@ function GetList(that)
           res.data[i].html = WxParse.wxParse('item', 'html', res.data[i].content, that,null);
           res.data[i].img_height = 0;
           res.data[i].img_width = 0;
+          res.data[i].img_load_success = false;
           list.push(res.data[i]);
         }
         that.setData({list : list});
@@ -209,6 +210,7 @@ Page(
     temp_height = e.detail.height*temp_ratio;//计算缩放后的高度
     this.data.list[e.target.id].img_height = parseInt(temp_height);
     this.data.list[e.target.id].img_width  = parseInt(temp_width);
+    this.data.list[e.target.id].img_load_success = true;
     this.setData({list:this.data.list});
   },
   onPullDownRefresh: function()//下拉刷新

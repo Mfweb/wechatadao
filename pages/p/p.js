@@ -11,7 +11,7 @@ var LongTapID = "";//长按选择的ID
 var lont_tap_lock = false;
 var isfeed = false;
 var isfeeding = false;
-
+/* 取消订阅 */
 function DelFeed(fid,that)
 {
   if(isfeeding)return;
@@ -56,7 +56,7 @@ function DelFeed(fid,that)
     function(){isfeeding=false;},
     that);
 }
-//添加到收藏
+/* 添加订阅 */
 function AddFeed(fid,that)
 {
   if(isfeeding)return;
@@ -187,13 +187,13 @@ function GetQuoteBody(all_kid,that,mode = 1)
 function GetQuote(kid)
 {
   var te = /((&gt;){2}|(>){2})(No\.){0,3}\d{1,11}/g;//正则表达式匹配出所有引用串号，支持>>No.123123和>>123123 两种引用格式
+  //var te_addr = /h.nimingban.com\/t\/\d{1,11}/g;
   var te2 = /\d{1,11}/g;
   var out_data = {html:null,all_kid:[]};
-  
   var all_find = kid.match(te);
   if(all_find!=null && all_find!=false && all_find.length>0)
   {
-    out_data.html = kid.replace(te,'<view class="bequote">$&</view>');
+    out_data.html = kid.replace(te,'<view class="bequote">$&</view><view class="be_br"></view>');
     for(let i = 0;i< all_find.length;i++)
     {
       let temp_find = all_find[i].match(te2);
@@ -256,6 +256,7 @@ function GetList(that)
           {
             header.img = res.data.img + res.data.ext;
             header.thumburl = res.data.ext==".gif"?appInstance.globalData.url.full_img_url:appInstance.globalData.url.thumb_img_url;
+            header.img_load_success = false;
           }
           else
           {
@@ -291,6 +292,7 @@ function GetList(that)
           res.data.replys[i].html = WxParse.wxParse('item', 'html', res.data.replys[i].content, that,null);
           res.data.replys[i].img_height = 0;
           res.data.replys[i].img_width = 0;
+          res.data.replys[i].img_load_success = false;
           list.push(res.data.replys[i]);
         }
         that.setData({list : list});
@@ -356,15 +358,19 @@ Page({
     if(appInstance.globalData.userinfo.user_openid == null)//获取openid
       appInstance.get_user_openid();
     var all_feed = wx.getStorageSync('FeedObj');
-    for(let i=0;i<all_feed.length;i++)
+    if(all_feed!=null && all_feed!=undefined)
     {
-      if(all_feed[i].id == page_id)
+      for(let i=0;i<all_feed.length;i++)
       {
-        this.setData({staricon:"../../icons/star2.png"});
-        isfeed = true;
-        break;
+        if(all_feed[i].id == page_id)
+        {
+          this.setData({staricon:"../../icons/star2.png"});
+          isfeed = true;
+          break;
+        }
       }
     }
+
     GetList(that);
   },
   onShow:function()
@@ -469,6 +475,7 @@ Page({
     temp_height = e.detail.height*temp_ratio;//计算缩放后的高度
     this.data.list[e.target.id].img_height = parseInt(temp_height);
     this.data.list[e.target.id].img_width  = parseInt(temp_width);
+    this.data.list[e.target.id].img_load_success = true;
     //console.log(e.target.id + " " + this.data.list[e.target.id].img_height + ":" + this.data.list[e.target.id].img_width);
     this.setData({list:this.data.list});
   },
