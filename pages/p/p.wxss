@@ -1,22 +1,19 @@
 /* pages/p/p.wxss */
 
-.po{
+.po{/*PO主ID*/
     background-color: #EED2EE;
 }
 
-.q_window{
+.q_window{/*引用串窗口*/
   position: fixed;
   width: 80%;
   margin-left: 10%;
   margin-top: 10%;
-  background: #F5F5F5;/*
-  transition: All 0.4s ease; 
-  -webkit-transition: All 0.4s ease;*/
+  background: #F5F5F5;
   z-index:4;
   box-shadow: 0px 0px 6px 0px #fff;
   max-height: 90%;
   display: block;
-  overflow: auto;
 }
 
 .q_list_c{
