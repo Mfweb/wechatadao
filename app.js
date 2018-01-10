@@ -2,9 +2,9 @@
 App({
   globalData:{
     url:{
-      host          :"https://h.nimingban.com",
-      thumb_img_url :"http://img6.nimingban.com/thumb/",//缩略图
-      full_img_url  :"http://img6.nimingban.com/image/",//原图
+      host: "http://adnmb1.com",//https://tnmb.org   http://adnmb1.com
+      thumb_img_url :"http://nmbimg.fastmirror.org/thumb/",//缩略图
+      full_img_url  :"http://nmbimg.fastmirror.org/image/",//原图
 
       show_forum_url:"/Api/showf?appid=wechatapp",//获得板块内串
       get_forum_url :"/Api/getForumList?appid=wechatapp",//获得板块列表
@@ -26,11 +26,24 @@ App({
     },
     sysinfo:{
       sys_height : 0,//屏幕大小
-      sys_width : 0
+      sys_width : 0,
+      mode: 2//1:主岛  2:被抬岛
     }
   },
   onLaunch: function()
   {
+    if (this.globalData.sysinfo.mode == 1)
+    {
+      this.globalData.url.host = "http://adnmb1.com";
+      this.globalData.url.thumb_img_url = "http://nmbimg.fastmirror.org/thumb/";
+      this.globalData.url.full_img_url = "http://nmbimg.fastmirror.org/image/";
+    }
+    else if (this.globalData.sysinfo.mode == 2)
+    {
+      this.globalData.url.host = "https://tnmb.org";
+      this.globalData.url.thumb_img_url = "https://tnmbstatic.fastmirror.org/Public/Upload/thumb/";
+      this.globalData.url.full_img_url = "https://tnmbstatic.fastmirror.org/Public/Upload/image/";
+    }
     var res = wx.getSystemInfoSync();//获取屏幕尺寸
     this.globalData.sysinfo.sys_width  = res.windowWidth;
     this.globalData.sysinfo.sys_height = res.windowHeight;

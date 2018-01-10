@@ -1,5 +1,6 @@
 // HTML 支持的数学符号
 function strNumDiscode(str){
+  if(str == null)return null;
     str = str.replace(/&forall;/g, '∀');
     str = str.replace(/&part;/g, '∂');
     str = str.replace(/&exists;/g, '∃');
@@ -42,6 +43,7 @@ function strNumDiscode(str){
 
 //HTML 支持的希腊字母
 function strGreeceDiscode(str){
+  if(str==null)return null;
     str = str.replace(/&Alpha;/g, 'Α');
     str = str.replace(/&Beta;/g, 'Β');
     str = str.replace(/&Gamma;/g, 'Γ');
@@ -102,6 +104,7 @@ function strGreeceDiscode(str){
 // 
 
 function strcharacterDiscode(str){
+  if(str == null)return null;
     // 加入常用解析
     str = str.replace(/&nbsp;/g, ' ');
     str = str.replace(/&quot;/g, "'");
@@ -117,6 +120,7 @@ function strcharacterDiscode(str){
 
 // HTML 支持的其他实体
 function strOtherDiscode(str){
+  if (str == null) return null;
     str = str.replace(/&OElig;/g, 'Œ');
     str = str.replace(/&oelig;/g, 'œ');
     str = str.replace(/&Scaron;/g, 'Š');
@@ -175,6 +179,7 @@ function strOtherDiscode(str){
 }
 
 function strMoreDiscode(str){
+  if (str == null) return null;
     str = str.replace(/\r\n/g,"");  
     str = str.replace(/\n/g,"");
 
@@ -183,6 +188,7 @@ function strMoreDiscode(str){
 }
 
 function strDiscode(str){
+  if (str == null) return null;
     str = strNumDiscode(str);
     str = strGreeceDiscode(str);
     str = strcharacterDiscode(str);

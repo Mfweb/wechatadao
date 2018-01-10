@@ -26,23 +26,30 @@ function GetTitle(that)
 /*获取板块内串*/
 function GetList(that)
 {
-  if(post_run || page_id==-1)return;
+  if(post_run)return;
   post_run = true;
   that.setData({bot_text:"正在加载.."});
+  
+  var pData = Array();
+  pData.page = page;
+  if(page_id!=-1)pData.id = page_id;
   AdaoAPI.api_request(
     "",
     appInstance.globalData.url.host + appInstance.globalData.url.show_forum_url,
-    {id : page_id,page : page},
+    pData,
     function(res,that){//success
       var list = that.data.list;
-      if(res.data.length > 0)
+      if (res.data.length > 0 && res.data != "该板块不存在")
       {
         for(let i = 0; i < res.data.length; i++)
         {
           if(res.data[i].img != "")
           {
             res.data[i].img = res.data[i].img + res.data[i].ext;
-            res.data[i].thumburl = res.data[i].ext==".gif"?appInstance.globalData.url.full_img_url:appInstance.globalData.url.thumb_img_url;
+            if (res.data[i].ext == ".gif")
+              res.data[i].thumburl = appInstance.globalData.url.full_img_url;
+            else
+              res.data[i].thumburl = appInstance.globalData.url.thumb_img_url;
           }
           res.data[i].html = WxParse.wxParse('item', 'html', res.data[i].content, that,null);
           res.data[i].img_height = 0;
@@ -52,8 +59,12 @@ function GetList(that)
         }
         that.setData({list : list});
         page ++;
+        that.setData({ bot_text: list.length + ",上拉继续加载.." });
       }
-      that.setData({bot_text:list.length+",上拉继续加载.."});
+      else
+      {
+        that.setData({ bot_text: "加载失败," + res.data });
+      }
     },
     function(res,that){//fail
       wx.showToast({
@@ -80,6 +91,7 @@ function GetFList(that)
     null,
     function(res){//success
       var list_temp = [];//板块列表
+      console.log(res.data);
       if(res.data.length > 0)
       {
         for(let i = 0; i < res.data.length; i++)
@@ -87,7 +99,8 @@ function GetFList(that)
           let temp = res.data[i].forums;
           for(let j=0;j<temp.length;j++)
           {
-            temp[j].showNameHtml = temp[j].showName;
+            if (temp[j].showName == null) temp[j].showName = temp[j].name;
+            else temp[j].showNameHtml = temp[j].showName;
             temp[j].showName = WxParse.wxParse('item', 'html', temp[j].showName, that,5);
           }
           res.data[i].forums = temp;
@@ -136,6 +149,7 @@ function refGet(that)
     scrollTop : 0
   });
   GetList(that);
+  //wx.startPullDownRefresh({ });
   return GetTitle(that);
 }
 

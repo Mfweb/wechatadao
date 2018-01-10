@@ -47,10 +47,13 @@ function q(v) {
 }
 
 function removeDOCTYPE(html) {
+  if (html!=null)
     return html
         .replace(/<\?xml.*\?>\n/, '')
         .replace(/<.*!doctype.*\>\n/, '')
         .replace(/<.*!DOCTYPE.*\>\n/, '');
+  else
+    return null;
 }
 
 
