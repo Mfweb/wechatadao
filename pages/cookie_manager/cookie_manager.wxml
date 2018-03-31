@@ -9,6 +9,7 @@
         <view class="v_hr"></view>
     </view>
     <view class="add_new_cookie">
-    <button bindtap='onTapBut'>扫描二维码添加</button>
+    <button bindtap='onTapScan'>扫描二维码添加</button>
+    <button bindtap='onTapReg'>饼干管理系统</button>
     </view>
 </view>

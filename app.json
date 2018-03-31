@@ -4,7 +4,8 @@
     "pages/p/p",
     "pages/new/new",
     "pages/cookie_manager/cookie_manager",
-    "pages/favorite_manager/favorite_manager"
+    "pages/favorite_manager/favorite_manager",
+    "pages/web/web"
   ],
   "window":{
     "backgroundTextStyle":"light",

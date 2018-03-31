@@ -80,7 +80,7 @@ Page(
         }
         load_cookies(this);
     },
-    onTapBut:function(e)//扫描二维码添加饼干
+    onTapScan:function(e)//扫描二维码添加饼干
     {
       var that = this;
       wx.scanCode({
@@ -98,6 +98,12 @@ Page(
         },
         fail: function(e)
         {}
+      })
+    },
+    onTapReg:function(e)
+    {
+      wx.navigateTo({
+        url: '../web/web',
       })
     }
 })
