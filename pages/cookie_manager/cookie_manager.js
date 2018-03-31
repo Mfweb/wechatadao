@@ -1,3 +1,12 @@
+var add_cookies = function(that,cookie)
+{
+  load_cookies(that);
+  var cookies = that.data.cookie_list;
+  cookies.push(cookie);
+  save_cookies(cookies);
+  load_cookies(that);
+}
+
 var save_cookies = function(list)
 {
     var out_text = "";
@@ -23,7 +32,7 @@ var load_cookies = function(that)
     {
         for(let i=0;i<temp.length;i++)
         {
-            if(temp[i]!==null && temp[i]!==undefined && temp[i]!=='' && temp[i]!=='null')
+          if (temp[i] !== null && temp[i] !== undefined && temp[i] !== '' && temp[i] !== 'null' && temp[i]!= enable_ck)
                 list.push(temp[i]);
         }
     }
@@ -70,5 +79,25 @@ Page(
             save_cookies(list);
         }
         load_cookies(this);
+    },
+    onTapBut:function(e)//扫描二维码添加饼干
+    {
+      var that = this;
+      wx.scanCode({
+        onlyFromCamera:false,
+        scanType: ['qrCode'],
+        success: function(e)
+        {
+          if(e.errMsg == "scanCode:ok")
+          {
+            var c_data = JSON.parse(e.result);
+            if (c_data.cookie != undefined && c_data.cookie.length > 10)
+              add_cookies(that, c_data.cookie);
+          }
+          console.log(e);
+        },
+        fail: function(e)
+        {}
+      })
     }
 })

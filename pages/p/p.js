@@ -20,7 +20,7 @@ function DelFeed(fid,that)
   {
     wx.showToast({
       title: '获取openid失败',
-      icon: 'success',
+      image: '../../icons/alert.png',
       duration: 500
     });
     return;
@@ -45,7 +45,7 @@ function DelFeed(fid,that)
       {
         wx.showToast({
           title: '取消订阅失败！',
-          icon: 'success',
+          image: '../../icons/alert.png',
           duration: 500
         });
       }
@@ -65,7 +65,7 @@ function AddFeed(fid,that)
   {
     wx.showToast({
       title: '获取openid失败',
-      icon: 'success',
+      image: '../../icons/alert.png',
       duration: 500
     });
     return;
@@ -90,7 +90,7 @@ function AddFeed(fid,that)
       {
         wx.showToast({
           title: "订阅大失败",
-          icon: 'success',
+          image: '../../icons/alert.png',
           duration: 500
         });
       }
@@ -322,7 +322,7 @@ function GetList(that)
       that.setData({bot_text:"error"});
         wx.showToast({
           title: '加载失败',
-          icon: 'success',
+          image: '../../icons/alert.png',
           duration: 500
         });
         that.setData({bot_text:"加载失败"});

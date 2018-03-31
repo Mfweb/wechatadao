@@ -69,7 +69,7 @@ function GetList(that)
     function(res,that){//fail
       wx.showToast({
         title: '加载失败',
-        icon: 'success',
+        image: '../../icons/alert.png',
         duration: 1500
       });
       that.setData({bot_text:"加载失败"});
@@ -112,7 +112,7 @@ function GetFList(that)
     function(res){//fail
       wx.showToast({
         title: '板块列表加载失败',
-        icon: 'success',
+        image: '../../icons/alert.png',
         duration: 500
       })
     },

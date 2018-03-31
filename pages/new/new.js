@@ -46,7 +46,7 @@ function callback_success(res)
     console.log(res);
     wx.showToast({
       title: res.data.info,
-      icon: 'success',
+      image: '../../icons/alert.png',
       duration: 2000
     });
   }
@@ -56,7 +56,7 @@ function callback_fail(res)
 {
   wx.showToast({
     title: '发送失败',
-    icon: 'success',
+    image: '../../icons/alert.png',
     duration: 2000
   });
   console.log(res);
@@ -73,21 +73,21 @@ function A_Send(that,resto,content,file=null,water="true")
   if(user_cookie == 'null')
   {
     wx.showToast({
-      title: '正在获取cookie..',
-      icon: 'success',
+      title: '没有cookie..',
+      image: '../../icons/alert.png',
       duration: 1500
     });
     return;
   }
-  else if(user_cookie == 'error')
+  /*else if(user_cookie == 'error')
   {
     wx.showToast({
       title: '没有开饼干..',
-      icon: 'success',
+      image: '../../icons/alert.png',
       duration: 1500
     });
     return;
-  }
+  }*/
   that.setData({UploadDisable:true,hidden:false});
   var post_url = appInstance.globalData.url.host + (re_mode==1?appInstance.globalData.url.new_thread_url:appInstance.globalData.url.new_reply_url);
   if(file==null)//无图
@@ -177,8 +177,12 @@ Page({
     {
       this.setData({txt_focus:true});
       var temp = location_get_cookie();
-      console.log(temp);
-      if(temp == '' || temp == '0')//本地cookie获取失败，从服务器获取
+      if (temp == '' || temp == '0')
+        user_cookie = 'null';
+      else
+        user_cookie = temp;
+      //console.log(temp);
+      /*if(temp == '' || temp == '0')//本地cookie获取失败，从服务器获取
       {
         user_cookie = 'null';
         adao_get_cookie();
@@ -186,7 +190,7 @@ Page({
       else
       {
         user_cookie = temp;
-      }
+      }*/
     },
     cl_tp:function()//清空输入和图片
     {
