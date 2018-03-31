@@ -103,7 +103,7 @@ Page(
     onTapReg:function(e)
     {
       wx.navigateTo({
-        url: '../web/web',
+        url: '../web/web?url=http://adnmb.com/Member',
       })
     }
 })

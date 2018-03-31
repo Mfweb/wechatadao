@@ -1,1 +1,1 @@
-<web-view src='http://adnmb.com/Member'></web-view>
+<web-view src='{{url}}'></web-view>

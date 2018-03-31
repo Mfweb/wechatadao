@@ -351,4 +351,11 @@ Page(
   {
     this.setData({ShowMenu:false});
   },
+  tap_member:function(e)
+  {
+    wx.navigateTo({
+      url: '../web/web?url=http://adnmb.com/Member',
+    });
+    this.setData({ ShowMenu: false });
+  }
 })
