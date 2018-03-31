@@ -140,6 +140,10 @@
   z-index:1;
 }
 .loading_gif{
-    width: 24px;
-    height: 24px;
+  width: 24px;
+  height: 24px;
+}
+.hiddenScroll{
+  overflow:hidden;
+  position:fixed;
 }

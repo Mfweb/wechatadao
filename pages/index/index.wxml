@@ -27,7 +27,7 @@
 <input class="input_cs" type="number" value="{{default_page}}" bindinput="page_input" />
 </modal>
 <!--主列表-->
-<view class="container">
+<view class="container {{open?'hiddenScroll':''}}">
   <view class="item" wx:for="{{list}}" id="{{item.id}}" bindtap="bind_view_tap" wx:key="b_list">
     <view class="text">
       <view class="b1">
