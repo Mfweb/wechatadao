@@ -551,5 +551,13 @@ Page({
   tap_ch:function()
   {
     this.setData({open:false});
+  },
+  onShareAppMessage:function()
+  {
+    return{
+      title: "A岛匿名版",
+      desc: this.data.list[0].title,
+      path: "/pages/p/p?id=" + page_id
+    };
   }
 })
