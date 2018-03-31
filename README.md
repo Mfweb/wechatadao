@@ -6,11 +6,11 @@ A岛微信小程序
 https://github.com/icindy/wxParse  
   
 # 截图 #
-![1](https://github.com/Mfweb/wechatadao/raw/master/screenshot/1.png)  
-![2](https://github.com/Mfweb/wechatadao/raw/master/screenshot/2.png)  
-![3](https://github.com/Mfweb/wechatadao/raw/master/screenshot/3.png)  
-![4](https://github.com/Mfweb/wechatadao/raw/master/screenshot/4.png)  
-![5](https://github.com/Mfweb/wechatadao/raw/master/screenshot/5.png)  
-![6](https://github.com/Mfweb/wechatadao/raw/master/screenshot/6.png)  
-![7](https://github.com/Mfweb/wechatadao/raw/master/screenshot/7.png)  
-![8](https://github.com/Mfweb/wechatadao/raw/master/screenshot/8.png)  
+![1](https://github.com/Mfweb/wechatadao/raw/master/screenshot/1.PNG)  
+![2](https://github.com/Mfweb/wechatadao/raw/master/screenshot/2.PNG)  
+![3](https://github.com/Mfweb/wechatadao/raw/master/screenshot/3.PNG)  
+![4](https://github.com/Mfweb/wechatadao/raw/master/screenshot/4.PNG)  
+![5](https://github.com/Mfweb/wechatadao/raw/master/screenshot/5.PNG)  
+![6](https://github.com/Mfweb/wechatadao/raw/master/screenshot/6.PNG)  
+![7](https://github.com/Mfweb/wechatadao/raw/master/screenshot/7.PNG)  
+![8](https://github.com/Mfweb/wechatadao/raw/master/screenshot/8.PNG)  
