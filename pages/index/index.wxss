@@ -87,3 +87,7 @@
       -webkit-transform: rotateZ(360deg);
     }
 }
+
+.item_hover{
+  background:#DBDBDB;
+}
