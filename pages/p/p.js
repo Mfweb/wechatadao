@@ -11,6 +11,7 @@ var LongTapID = "";//长按选择的ID
 var lont_tap_lock = false;
 var isfeed = false;
 var isfeeding = false;
+var image_list = [];//图片列表
 /* 取消订阅 */
 function DelFeed(fid,that)
 {
@@ -257,6 +258,7 @@ function GetList(that)
             header.img = res.data.img + res.data.ext;
             header.thumburl = res.data.ext==".gif"?appInstance.globalData.url.full_img_url:appInstance.globalData.url.thumb_img_url;
             header.img_load_success = false;
+            image_list.push(appInstance.globalData.url.full_img_url + res.data.img + res.data.ext);
           }
           else
           {
@@ -285,6 +287,7 @@ function GetList(that)
           {
             res.data.replys[i].img = res.data.replys[i].img + res.data.replys[i].ext;
             res.data.replys[i].thumburl = res.data.replys[i].ext==".gif"?appInstance.globalData.url.full_img_url:appInstance.globalData.url.thumb_img_url;
+            image_list.push(appInstance.globalData.url.full_img_url + res.data.replys[i].img);
           }
           let temp_html = GetQuote(res.data.replys[i].content);
           res.data.replys[i].content = temp_html.html;//正则高亮所有引用串号
@@ -459,11 +462,11 @@ Page({
       img_url = this.data.q_list[e['currentTarget'].id].img;
     else
       img_url = this.data.list[e['currentTarget'].id].img;
-    var pr_imgs = [appInstance.globalData.url.full_img_url + img_url];
+
     wx.previewImage({
-      current: appInstance.globalData.url.thumb_img_url + img_url,
-      urls:pr_imgs
-    })
+      current: appInstance.globalData.url.full_img_url + img_url,
+      urls:image_list
+    });
   },
   bind_pic_load: function(e)//图片载入完成
   {

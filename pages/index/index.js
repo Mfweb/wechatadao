@@ -6,7 +6,7 @@ var page_in   = 1;//输入的页数
 var appInstance = getApp();
 var pw_run = false;//防止下拉刷新清空列表的时候触发上拉加载
 var post_run = false;//防止重复请求
-
+var open_run = false;//防止重复打开
 /*修改标题为当前板块*/
 function GetTitle(that)
 {
@@ -199,10 +199,13 @@ Page(
 
   bind_view_tap: function(e)//单击
   {
+    if (open_run)return;
     if(e.target.id!="")return;
+    open_run = true;
     this.setData({isloading:true});
     wx.navigateTo({url: '../p/p?id=' + e['currentTarget'].id});
     this.setData({isloading:false});
+    open_run = false;
   },
 
   bind_pic_tap: function(e)//单击图片

@@ -27,7 +27,7 @@ App({
     sysinfo:{
       sys_height : 0,//屏幕大小
       sys_width : 0,
-      mode: 2//1:主岛  2:备胎岛
+      mode: 1//1:主岛  2:备胎岛
     }
   },
   onLaunch: function()
