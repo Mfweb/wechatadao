@@ -12,6 +12,7 @@ var lont_tap_lock = false;
 var isfeed = false;
 var isfeeding = false;
 var image_list = [];//图片列表
+var po_id = "";
 /* 取消订阅 */
 function DelFeed(fid,that)
 {
@@ -119,13 +120,23 @@ function GetQuoteOne(kindex,that,mode = 0)
         else
         {
           var q_list = that.that.data.q_list;
-          res.data.html = WxParse.wxParse('item', 'html', res.data.content, that,null);
+          res.data.content = WxParse.wxParse('item', 'html', res.data.content, that, null).nodes;
           res.data.sid = res.data.id;
           if(res.data.img!="")
           {
             res.data.img = res.data.img + res.data.ext;
             res.data.thumburl = res.data.ext==".gif"?appInstance.globalData.url.full_img_url:appInstance.globalData.url.thumb_img_url;
           }
+          var html_h = "<font class='";
+          
+          if (res.data.admin == 1)
+            html_h += "xuankuhongming";
+          if (res.data.userid == po_id)
+            html_h += "po";
+          html_h += "'>"
+          html_h += res.data.userid + "</font>";
+          res.data.userid = WxParse.wxParse('item', 'html', html_h, that, null).nodes;
+
           q_list[that.kindex] = res.data;
           that.that.setData({q_list:q_list});
         }
@@ -151,12 +162,22 @@ function GetQuoteOne(kindex,that,mode = 0)
         }
         else
         {
-          res.data.html = WxParse.wxParse('item', 'html', res.data.content, that,null);
+          res.data.content = WxParse.wxParse('item', 'html', res.data.content, that, null).nodes;
           if(res.data.img != "")
           {
             res.data.img = res.data.img + res.data.ext;
             res.data.thumburl = appInstance.globalData.url.thumb_img_url;
           }
+          var html_h = "<font class='";
+
+          if (res.data.admin == 1)
+            html_h += "xuankuhongming";
+          if (res.data.userid == po_id)
+            html_h += "po";
+          html_h += "'>"
+          html_h += res.data.userid + "</font>";
+          res.data.userid = WxParse.wxParse('item', 'html', html_h, that, null).nodes;
+
           q_list[that.kindex] = res.data;
         }
         that.that.setData({q_list:q_list});
@@ -243,8 +264,7 @@ function GetList(that)
           'name':res.data.name,
           'email':res.data.email,
           'title':res.data.title,
-          'html':WxParse.wxParse('item', 'html', temp_fid.html, that,null),
-          'content':temp_fid.html,
+          'content': WxParse.wxParse('item', 'html', temp_fid.html, that, null).nodes,
           'all_kid':temp_fid.all_kid,
           'admin':res.data.admin,
           'replyCount':res.data.replyCount,
@@ -253,23 +273,35 @@ function GetList(that)
           'img_height':0,
           'img_width':0
           };
-          if(res.data.img!="")
-          {
-            header.img = res.data.img + res.data.ext;
-            header.thumburl = res.data.ext==".gif"?appInstance.globalData.url.full_img_url:appInstance.globalData.url.thumb_img_url;
-            header.img_load_success = false;
-            image_list.push(appInstance.globalData.url.full_img_url + res.data.img + res.data.ext);
-          }
-          else
-          {
-            header.img = "";
-            header.thumburl= "";
-          }
-          list.push(header);
-          wx.setNavigationBarTitle({//设置标题
-            title: list[0].title,
-            success: function(res) {}
-          });
+        po_id = res.data.userid;
+
+        var html_h = "<font class='";
+
+        if (res.data.admin == 1)
+          html_h += "xuankuhongming";
+        if (res.data.userid == po_id)
+          html_h += " po";
+        html_h += "'>"
+        html_h += res.data.userid + "</font>";
+        header.userid = WxParse.wxParse('item', 'html', html_h, that, null).nodes;
+
+        if(res.data.img!="")
+        {
+          header.img = res.data.img + res.data.ext;
+          header.thumburl = res.data.ext==".gif"?appInstance.globalData.url.full_img_url:appInstance.globalData.url.thumb_img_url;
+          header.img_load_success = false;
+          image_list.push(appInstance.globalData.url.full_img_url + res.data.img + res.data.ext);
+        }
+        else
+        {
+          header.img = "";
+          header.thumburl= "";
+        }
+        list.push(header);
+        wx.setNavigationBarTitle({//设置标题
+          title: list[0].title,
+          success: function(res) {}
+        });
       }
       
       var len = 0;
@@ -292,10 +324,21 @@ function GetList(that)
           let temp_html = GetQuote(res.data.replys[i].content);
           res.data.replys[i].content = temp_html.html;//正则高亮所有引用串号
           res.data.replys[i].all_kid = temp_html.all_kid;
-          res.data.replys[i].html = WxParse.wxParse('item', 'html', res.data.replys[i].content, that,null);
+          res.data.replys[i].content = WxParse.wxParse('item', 'html', res.data.replys[i].content, that, null).nodes;
           res.data.replys[i].img_height = 0;
           res.data.replys[i].img_width = 0;
           res.data.replys[i].img_load_success = false;
+
+          var html_h = "<font class='";
+
+          if (res.data.replys[i].admin == 1)
+            html_h += "xuankuhongming";
+          if (res.data.replys[i].userid == po_id)
+            html_h += "po";
+          html_h += "'>"
+          html_h += res.data.replys[i].userid + "</font>";
+          res.data.replys[i].userid = WxParse.wxParse('item', 'html', html_h, that, null).nodes;
+
           list.push(res.data.replys[i]);
         }
         that.setData({list : list});

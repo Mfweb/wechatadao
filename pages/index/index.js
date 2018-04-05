@@ -51,10 +51,14 @@ function GetList(that)
             else
               res.data[i].thumburl = appInstance.globalData.url.thumb_img_url;
           }
-          res.data[i].html = WxParse.wxParse('item', 'html', res.data[i].content, that,null);
+          res.data[i].content = WxParse.wxParse('item', 'html', res.data[i].content, that, null).nodes;
           res.data[i].img_height = 0;
           res.data[i].img_width = 0;
           res.data[i].img_load_success = false;
+          if (res.data[i].admin == 1)
+            res.data[i].userid = WxParse.wxParse('item', 'html', "<font class='xuankuhongming'>" + res.data[i].userid + "</font>", that, null).nodes;
+          else
+            res.data[i].userid = WxParse.wxParse('item', 'html', res.data[i].userid, that, null).nodes;
           list.push(res.data[i]);
         }
         that.setData({list : list});

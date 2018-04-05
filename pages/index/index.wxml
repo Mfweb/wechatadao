@@ -32,14 +32,14 @@
     <view class="text">
       <view class="b1">
         <view class="cid">No.{{item.id}}</view>
-        <view class="{{item.admin == 1?'xuankuhongming':''}}">{{item.userid}}</view>
+        <template is="wxParse" data="{{wxParseData:item.userid}}"/>
         <view class="stime">{{item.now}}</view>
       </view>
       <view class="b2">
         <view class="title" wx:if="{{item.title!='无标题'}}" >{{item.title}}</view>
         <view class="uname" wx:if="{{item.name!='无名氏'}}" >{{item.name}}</view>
       </view>
-      <template is="wxParse" data="{{wxParseData:item.html.nodes}}"/>
+      <template is="wxParse" data="{{wxParseData:item.content}}"/>
     </view>
     <view style="width:100%;" wx:if="{{item.img!=''}}"><!--不加这一层可能导致点击图片周围空白区域无法触发tap-->
       <image wx:if="{{!item.img_load_success}}" class="loading_gif" src="../../icons/loading.gif"></image>
