@@ -132,7 +132,7 @@ function GetQuoteOne(kindex,that,mode = 0)
           if (res.data.admin == 1)
             html_h += "xuankuhongming";
           if (res.data.userid == po_id)
-            html_h += "po";
+            html_h += " po";
           html_h += "'>"
           html_h += res.data.userid + "</font>";
           res.data.userid = WxParse.wxParse('item', 'html', html_h, that, null).nodes;
@@ -173,7 +173,7 @@ function GetQuoteOne(kindex,that,mode = 0)
           if (res.data.admin == 1)
             html_h += "xuankuhongming";
           if (res.data.userid == po_id)
-            html_h += "po";
+            html_h += " po";
           html_h += "'>"
           html_h += res.data.userid + "</font>";
           res.data.userid = WxParse.wxParse('item', 'html', html_h, that, null).nodes;
@@ -334,7 +334,7 @@ function GetList(that)
           if (res.data.replys[i].admin == 1)
             html_h += "xuankuhongming";
           if (res.data.replys[i].userid == po_id)
-            html_h += "po";
+            html_h += " po";
           html_h += "'>"
           html_h += res.data.replys[i].userid + "</font>";
           res.data.replys[i].userid = WxParse.wxParse('item', 'html', html_h, that, null).nodes;
