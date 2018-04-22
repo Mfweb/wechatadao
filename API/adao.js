@@ -15,7 +15,7 @@ function api_request(userid,url,data,handle_success,handle_fail,handle_finish,f_
         header:
         {
             'content-type'      : 'application/x-www-form-urlencoded',
-            'User-Agent'        : 'HavfunClient-WeChatAPP',
+//            'User-Agent'        : 'HavfunClient-WeChatAPP',
             'X-Requested-With'  : 'XMLHttpRequest',
             'cookie'            : 'userhash=' + userid
         },
@@ -53,7 +53,7 @@ function api_uploadfile(userid,url,data,imgfile,handle_success,handle_fail,handl
     header:{
         'cookie'            : 'userhash=' + userid,
         'content-type'      : 'application/x-www-form-urlencoded',
-        'User-Agent'        : 'HavfunClient-WeChatAPP',
+//        'User-Agent'        : 'HavfunClient-WeChatAPP',
         'X-Requested-With'  : 'XMLHttpRequest'
     },
     formData:data==null?{}:data,

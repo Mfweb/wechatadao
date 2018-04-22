@@ -1,8 +1,8 @@
 var WxParse = require('../../wxParse/wxParse.js');
 var AdaoAPI = require('../../API/adao.js');
 var page = 1;//当前页数
-var page_id = 0;//串ID
-var page_in = -1;//输入要跳转的页面
+var forum_id = 0;//串ID
+var forum_input = -1;//输入要跳转的页面
 var last_length = 0;
 var appInstance = getApp();
 var pw_run = false;//防止下拉刷新清空列表的时候触发上拉加载
@@ -245,7 +245,7 @@ function GetList(that)
   AdaoAPI.api_request(
     "",
     appInstance.globalData.url.host + appInstance.globalData.url.thread_url,
-    {id : page_id,page : page},
+    { id: forum_id,page : page},
     function(res,that){//success
       if(res.data=="该主题不存在")
       {
@@ -397,7 +397,7 @@ Page({
  
   onLoad:function(e)
   {
-    page_id = e.id;
+    forum_id = e.id;
     page = 1;
     last_length = 0;
     var that = this;
@@ -408,7 +408,7 @@ Page({
     {
       for(let i=0;i<all_feed.length;i++)
       {
-        if(all_feed[i].id == page_id)
+        if (all_feed[i].id == forum_id)
         {
           this.setData({staricon:"../../icons/star2.png"});
           isfeed = true;
@@ -416,8 +416,7 @@ Page({
         }
       }
     }
-
-    GetList(that);
+    wx.startPullDownRefresh({});
   },
   onShow:function()
   {
@@ -455,7 +454,7 @@ Page({
   th_reply:function(e)//引用指定No.
   {
     if(LongTapID == "")return;
-    wx.navigateTo({url: '../new/new?mode=2&revid=' + page_id + "&rev_text=>>No." + LongTapID + "\n"});
+    wx.navigateTo({ url: '../new/new?mode=2&revid=' + forum_id + "&rev_text=>>No." + LongTapID + "\n"});
     LongTapID = "";
     this.setData({ShowMenu:true});
     lont_tap_lock=false;//解除tap锁
@@ -530,21 +529,21 @@ Page({
     var temp = wx.getStorageSync('ReplyIDList');
     if(temp!="")
       wx.setStorageSync('ReplyIDList', "")
-    wx.navigateTo({url: '../new/new?mode=2&revid=' + page_id + "&rev_text="+temp});
+    wx.navigateTo({ url: '../new/new?mode=2&revid=' + forum_id + "&rev_text="+temp});
   },
   tap_report:function()//举报本串
   {
-    wx.navigateTo({url: '../new/new?mode=3&revid=18&rev_text=>>No.'+page_id});
+    wx.navigateTo({ url: '../new/new?mode=3&revid=18&rev_text=>>No.' + forum_id});
   },
   tap_sl: function()
   {
-    page_in = 1;
+    forum_input = 1;
     this.setData({modalFlag:false,default_page:1});
   },
   modalOk: function(e)//设置好了跳转到某一页回来
   {  
     this.setData({modalFlag:true});
-    if(page_in<=0)
+    if (forum_input<=0)
     {
       wx.showModal(
         {
@@ -556,7 +555,7 @@ Page({
     }
     else
     {
-      page = page_in;
+      page = forum_input;
       var that = this;
       this.setData(
       {
@@ -576,19 +575,19 @@ Page({
     if(e['detail'].value!="")
     {
       if(isNaN(temp))temp=1;
-      page_in = temp;
-      return parseInt(page_in);
+      forum_input = temp;
+      return parseInt(forum_input);
     }
     else
-      page_in = -1;
+      forum_input = -1;
   },
   tap_feed:function()//收藏
   {
     var that = this;
     if(isfeed)//如果已经订阅了 就取消订阅
-      DelFeed(page_id,that);
+      DelFeed(forum_id,that);
     else
-      AddFeed(page_id,that);
+      AddFeed(forum_id,that);
   },
   f_touch:function()
   {
@@ -603,7 +602,7 @@ Page({
     return{
       title: "A岛匿名版",
       desc: this.data.list[0].title,
-      path: "/pages/p/p?id=" + page_id
+      path: "/pages/p/p?id=" + forum_id
     };
   }
 })

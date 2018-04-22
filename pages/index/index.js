@@ -1,41 +1,53 @@
 var WxParse   = require('../../wxParse/wxParse.js');
 var AdaoAPI   = require('../../API/adao.js');
 var page      = 1;//当前在多少页
-var page_id   = -1;//板块号
-var page_in   = 1;//输入的页数
+var forum_id   = -2;//板块号
+var forum_input   = 1;//输入的页数
 var appInstance = getApp();
 var pw_run = false;//防止下拉刷新清空列表的时候触发上拉加载
 var post_run = false;//防止重复请求
 var open_run = false;//防止重复打开
-/*修改标题为当前板块*/
-function GetTitle(that)
+
+function GetFnameByFid(that, fid)
 {
-  for(let i = 0;i < that.data.flist.length;i++)
+  if(fid == -1)return "时间线";
+  for (let i = 0; i < that.data.flist.length; i++)
   {
-    for(let j = 0;j < that.data.flist[i].forums.length;j++)
+    for (let j = 0; j < that.data.flist[i].forums.length; j++)
     {
-      if(that.data.flist[i].forums[j].id == page_id)
+      if (that.data.flist[i].forums[j].id == fid)
       {
         var title_temp = that.data.flist[i].forums[j].name;
-        wx.setNavigationBarTitle({title: title_temp});
         return title_temp;
       }
     }
   }
 }
+
+/*修改标题为当前板块*/
+function GetTitle(that)
+{
+  var fname = GetFnameByFid(that, forum_id);
+  wx.setNavigationBarTitle({ title: fname });
+  return fname;
+}
 /*获取板块内串*/
 function GetList(that)
 {
+  console.log(forum_id);
   if(post_run)return;
   post_run = true;
   that.setData({bot_text:"正在加载.."});
   
   var pData = Array();
   pData.page = page;
-  if(page_id!=-1)pData.id = page_id;
+  pData.id = forum_id;
+  var th_url = appInstance.globalData.url.host + appInstance.globalData.url.show_forum_url;
+  if (forum_id == -1)
+    th_url = appInstance.globalData.url.host + appInstance.globalData.url.timeline_url;
   AdaoAPI.api_request(
     "",
-    appInstance.globalData.url.host + appInstance.globalData.url.show_forum_url,
+    th_url,
     pData,
     function(res,that){//success
       var list = that.data.list;
@@ -55,6 +67,7 @@ function GetList(that)
           res.data[i].img_height = 0;
           res.data[i].img_width = 0;
           res.data[i].img_load_success = false;
+          res.data[i].fname = GetFnameByFid(that,res.data[i].fid);
           if (res.data[i].admin == 1)
             res.data[i].userid = WxParse.wxParse('item', 'html', "<font class='xuankuhongming'>" + res.data[i].userid + "</font>", that, null).nodes;
           else
@@ -184,15 +197,15 @@ Page(
     var select_f = wx.getStorageSync('SelectForumID');
 
     if(select_f != "")
-      page_id = select_f;
+      forum_id = select_f;
     else
       return;
-    GetList(that);
+    wx.startPullDownRefresh({});
   },
 
   onShow:function(e)
   {
-    if(page_id==-1)//如果没有保存板块，就打开选择栏
+    if (forum_id==-2)//如果没有保存板块，就打开选择栏
       this.setData({open : true});
     else
     {
@@ -262,13 +275,13 @@ Page(
 
   tap_sl: function(e)//跳转到某一页
   {
-    page_in = 1;
+    forum_input = 1;
     this.setData({modalFlag:false,default_page:1});
   },
   modalOk: function(e)//设置好了跳转到某一页回来
   {  
     this.setData({modalFlag:true});
-    if(page_in<=0)
+    if (forum_input<=0)
     {
       wx.showModal(
         {
@@ -280,7 +293,7 @@ Page(
     }
     else
     {
-      page = page_in;
+      page = forum_input;
       var that = this;
       this.setData(
       {
@@ -300,26 +313,27 @@ Page(
     if(e['detail'].value!="")
     {
       if(isNaN(temp))temp=1;
-      page_in = temp;
-      return parseInt(page_in);
+      forum_input = temp;
+      return parseInt(forum_input);
     }
     else
-      page_in = -1;
+      forum_input = -1;
   },
 
   bind_fview_tap: function(e)//选择某个版块
   {
     var that = this;
     wx.setStorageSync('SelectForumID', e['currentTarget'].id);
-    page_id = e['currentTarget'].id;
-    var bk_name = refGet(that);
+    forum_id = e['currentTarget'].id;
+    var bk_name = GetFnameByFid(that, forum_id);
     wx.setStorageSync('SelectForumName', bk_name);
     this.setData({open : false});
+    wx.startPullDownRefresh({});
   },
 
   tap_nw : function()//发新串
   {
-    wx.navigateTo({url: '../new/new?mode=1&revid=' + page_id});
+    wx.navigateTo({ url: '../new/new?mode=1&revid=' + forum_id});
   },
   tap_ma: function()//管理工具
   {

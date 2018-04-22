@@ -2,10 +2,11 @@
 App({
   globalData:{
     url:{
-      host: "http://adnmb1.com",//https://tnmb.org   http://adnmb1.com
+      host: "https://nmb.fastmirror.org",//https://tnmb.org   http://adnmb1.com
       thumb_img_url :"http://nmbimg.fastmirror.org/thumb/",//缩略图
       full_img_url  :"http://nmbimg.fastmirror.org/image/",//原图
 
+      timeline_url  :"/Api/timeline?appid=wechatapp",//时间线
       show_forum_url:"/Api/showf?appid=wechatapp",//获得板块内串
       get_forum_url :"/Api/getForumList?appid=wechatapp",//获得板块列表
       thread_url    :"/Api/thread?appid=wechatapp",//获得串回复列表
@@ -34,7 +35,7 @@ App({
   {
     if (this.globalData.sysinfo.mode == 1)
     {
-      this.globalData.url.host = "http://adnmb1.com";
+      this.globalData.url.host = "https://nmb.fastmirror.org";
       this.globalData.url.thumb_img_url = "http://nmbimg.fastmirror.org/thumb/";
       this.globalData.url.full_img_url = "http://nmbimg.fastmirror.org/image/";
     }
