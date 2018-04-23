@@ -120,4 +120,11 @@ App({
       function () {//finish
       }, ndata);
   },
+  showError: function (title){
+    wx.showToast({
+      title: title,
+      image: '../../icons/alert.png',
+      duration: 1500
+    });
+  }
 })

@@ -7,6 +7,7 @@ var appInstance = getApp();
 var pw_run = false;//防止下拉刷新清空列表的时候触发上拉加载
 var post_run = false;//防止重复请求
 var open_run = false;//防止重复打开
+var search_keyword = null;//搜索关键字
 
 function GetFnameByFid(that, fid) {
   if (fid == -1) return "时间线";
@@ -18,7 +19,6 @@ function GetFnameByFid(that, fid) {
       }
     }
   }
-  //console.log(fid);
   return '';
 }
 
@@ -42,7 +42,7 @@ function GetList(that) {
   if (forum_id == -1)
     th_url = appInstance.globalData.url.host + appInstance.globalData.url.timeline_url;
   AdaoAPI.api_request(
-    "",
+    wx.getStorageSync('Cookie_Enable'),
     th_url,
     pData,
     function (res, that) {//success
@@ -77,11 +77,7 @@ function GetList(that) {
       }
     },
     function (res, that) {//fail
-      wx.showToast({
-        title: '加载失败',
-        image: '../../icons/alert.png',
-        duration: 1500
-      });
+      appInstance.showError('加载失败');
       that.setData({ bot_text: "加载失败" });
     },
     function () {//finish
@@ -118,11 +114,7 @@ function GetFList(that, success) {
       }
     },
     function (res) {//fail
-      wx.showToast({
-        title: '板块列表加载失败',
-        image: '../../icons/alert.png',
-        duration: 500
-      })
+      appInstance.showError('板块列表加载失败');
     },
     function (that) {
       that.setData({ loading_f: false });
@@ -173,6 +165,7 @@ Page(
       isloading: false,
       loading_f: false,
       ShowMenu: false,
+      input_mode: 1
     },
 
     onLoad: function () {
@@ -195,8 +188,9 @@ Page(
       });
     },
 
-    onShow: function (e)
-    { },
+    onShow: function (e){
+
+    },
 
     bind_view_tap: function (e)//单击
     {
@@ -258,29 +252,35 @@ Page(
     tap_sl: function (e)//跳转到某一页
     {
       forum_input = 1;
-      this.setData({ modalFlag: false, default_page: 1 });
+      this.setData({ modalFlag: false, default_page: 1, input_mode: 1 });
     },
     modalOk: function (e)//设置好了跳转到某一页回来
     {
       this.setData({ modalFlag: true });
-      if (forum_input <= 0) {
-        wx.showModal(
-          {
-            title: "输入有误！",
-            content: "页码应当大于0",
-            showCancel: false
-          }
-        );
+      if (this.data.input_mode == 1){
+        if (forum_input <= 0) {
+          wx.showModal(
+            {
+              title: "输入有误！",
+              content: "页码应当大于0",
+              showCancel: false
+            }
+          );
+        }
+        else {
+          page = forum_input;
+          var that = this;
+          this.setData(
+            {
+              list: [],
+              scrollTop: 0
+            });
+          GetList(that);
+        }
       }
-      else {
-        page = forum_input;
-        var that = this;
-        this.setData(
-          {
-            list: [],
-            scrollTop: 0
-          });
-        GetList(that);
+      else{
+        if (search_keyword == null || search_keyword.length < 1)return;
+        wx.navigateTo({ url: '../search/search?kw=' + search_keyword });
       }
     },
     modalCancel: function (e)//点击了取消
@@ -355,7 +355,10 @@ Page(
       });
       this.setData({ ShowMenu: false });
     },
-    tap_search: function () {
-
+    tap_search: function () {//搜索
+      this.setData({ modalFlag: false, default_page: 1, input_mode: 2, ShowMenu: false });
+    },
+    search_input: function (e) {//搜索输入
+      search_keyword = e['detail'].value;
     }
   })

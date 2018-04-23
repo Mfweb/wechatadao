@@ -38,20 +38,12 @@ function callback_success(res) {
   }
   else {
     console.log(res);
-    wx.showToast({
-      title: res.data.info,
-      image: '../../icons/alert.png',
-      duration: 2000
-    });
+    appInstance.showError(res.data.info);
   }
 }
 /*发送失败CallBack*/
 function callback_fail(res) {
-  wx.showToast({
-    title: '发送失败',
-    image: '../../icons/alert.png',
-    duration: 2000
-  });
+  appInstance.showError('发送失败');
   console.log(res);
 }
 /*调用完成CallBack*/
@@ -62,20 +54,12 @@ function callback_finish(fdata) {
 /*发送or回复*/
 function A_Send(that, resto, content, file = null, water = "true") {
   if (user_cookie == 'null') {
-    wx.showToast({
-      title: '没有cookie..',
-      image: '../../icons/alert.png',
-      duration: 1500
-    });
+    appInstance.showError('没有cookie..');
     return;
   }
   /*else if(user_cookie == 'error')
   {
-    wx.showToast({
-      title: '没有开饼干..',
-      image: '../../icons/alert.png',
-      duration: 1500
-    });
+    appInstance.showError('没有开饼干..');
     return;
   }*/
   that.setData({ UploadDisable: true, hidden: false });

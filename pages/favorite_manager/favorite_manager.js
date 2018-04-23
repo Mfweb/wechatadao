@@ -27,11 +27,7 @@ function GetList(that, force = false) {
         GetSList(that);
       }
       else {
-        wx.showToast({
-          title: '加载失败',
-          image: '../../icons/alert.png',
-          duration: 500
-        });
+        appInstance.showError('加载失败');
         that.setData({ bot_text: "加载失败" });
       }
     }, that);

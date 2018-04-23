@@ -18,11 +18,7 @@ function DelFeed(fid, that) {
   if (isfeeding) return;
   isfeeding = true;
   if (appInstance.globalData.userinfo.user_openid == null) {
-    wx.showToast({
-      title: '获取openid失败',
-      image: '../../icons/alert.png',
-      duration: 500
-    });
+    appInstance.showError('获取openid失败');
     return;
   }
   AdaoAPI.api_request(
@@ -31,21 +27,13 @@ function DelFeed(fid, that) {
     null,
     function (res, that) {//success
       if (res.data == "取消订阅成功!") {
-        wx.showToast({
-          title: '取消订阅成功',
-          icon: 'success',
-          duration: 500
-        });
+        appInstance.showError('取消订阅成功');
         appInstance.get_feed();
         that.setData({ staricon: "../../icons/star.png" });
         isfeed = false;
       }
       else {
-        wx.showToast({
-          title: '取消订阅失败！',
-          image: '../../icons/alert.png',
-          duration: 500
-        });
+        appInstance.showError('取消订阅失败！');
       }
     },
     function (res, that) {//fail
@@ -59,11 +47,7 @@ function AddFeed(fid, that) {
   if (isfeeding) return;
   isfeeding = true;
   if (appInstance.globalData.userinfo.user_openid == null) {
-    wx.showToast({
-      title: '获取openid失败',
-      image: '../../icons/alert.png',
-      duration: 500
-    });
+    appInstance.showError('获取openid失败');
     return;
   }
   AdaoAPI.api_request(
@@ -72,21 +56,13 @@ function AddFeed(fid, that) {
     null,
     function (res, that) {//success
       if (res.data == "订阅大成功→_→") {
-        wx.showToast({
-          title: '订阅大成功',
-          icon: 'success',
-          duration: 500
-        });
+        appInstance.showError('订阅大成功');
         appInstance.get_feed();
         that.setData({ staricon: "../../icons/star2.png" });
         isfeed = true;
       }
       else {
-        wx.showToast({
-          title: "订阅大失败",
-          image: '../../icons/alert.png',
-          duration: 500
-        });
+        appInstance.showError('订阅大失败');
       }
     },
     function (res, that) {//fail
@@ -335,11 +311,7 @@ function GetList(that) {
     },
     function (res, that) {//fail
       that.setData({ bot_text: "error" });
-      wx.showToast({
-        title: '加载失败',
-        image: '../../icons/alert.png',
-        duration: 500
-      });
+      appInstance.showError('加载失败');
       that.setData({ bot_text: "加载失败" });
     },
     function () {//finish

@@ -23,8 +23,9 @@
   </scroll-view>
 </view>
 <!--跳转到某一页-->
-<modal title="输入要跳转的页数" hidden="{{modalFlag}}" bindconfirm="modalOk" bindcancel="modalCancel" confirm-text="确定" cancel-text="取消">
-<input class="input_cs" type="number" value="{{default_page}}" bindinput="page_input" />
+<modal title="输入{{input_mode==1?'要跳转的页数':'关键字'}}" hidden="{{modalFlag}}" bindconfirm="modalOk" bindcancel="modalCancel" confirm-text="确定" cancel-text="取消">
+  <input wx:if='{{input_mode==1}}' class="input_cs" type="number" value="{{default_page}}" bindinput="page_input" />
+  <input wx:if='{{input_mode==2}}' class="input_cs" type="text" value="" bindinput="search_input" />
 </modal>
 <!--主列表-->
 <view class="container {{open?'hiddenScroll':''}}">
