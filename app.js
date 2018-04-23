@@ -14,6 +14,7 @@ App({
       get_feed_url  :"/Api/feed?appid=wechatapp",//获取所有订阅
       add_feed_url  :"/Api/addFeed?appid=wechatapp",//将串添加到订阅列表
       del_feed_url  :"/Api/delFeed?appid=wechatapp",//删除某个订阅的串
+      search_url    :"/Api/search?appid=wechatapp",//搜索
 
       new_thread_url:"/Home/Forum/doPostThread.html?appid=wechatapp",//发送新串
       new_reply_url :"/Home/Forum/doReplyThread.html?appid=wechatapp",//发送新回复

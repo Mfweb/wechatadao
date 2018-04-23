@@ -73,7 +73,7 @@ function AddFeed(fid,that)
     return;
   }
   AdaoAPI.api_request(
-    "",
+    wx.getStorageSync('Cookie_Enable'),
     appInstance.globalData.url.host + appInstance.globalData.url.add_feed_url + "&uuid=" + appInstance.globalData.userinfo.user_openid + "&tid=" + fid,
     null,
     function(res,that){//success
@@ -111,7 +111,7 @@ function GetQuoteOne(kindex,that,mode = 0)
   if(mode==0)
   {
     AdaoAPI.api_request(
-      "",
+      wx.getStorageSync('Cookie_Enable'),
       appInstance.globalData.url.host + appInstance.globalData.url.thread_url,
       {id : that.data.q_list[kindex].id,page : 1},
       function(res,that){//success
@@ -149,7 +149,7 @@ function GetQuoteOne(kindex,that,mode = 0)
   else
   {
     AdaoAPI.api_request(
-      "",
+      wx.getStorageSync('Cookie_Enable'),
       appInstance.globalData.url.host + appInstance.globalData.url.get_thread_url + "&id=" + that.data.q_list[kindex].id,
       {},
       function(res,that){//success
@@ -243,7 +243,7 @@ function GetList(that)
   else
     that.setData({bot_text:"Loading..."});
   AdaoAPI.api_request(
-    "",
+    wx.getStorageSync('Cookie_Enable'),
     appInstance.globalData.url.host + appInstance.globalData.url.thread_url,
     { id: forum_id,page : page},
     function(res,that){//success

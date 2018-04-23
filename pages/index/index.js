@@ -22,6 +22,8 @@ function GetFnameByFid(that, fid)
       }
     }
   }
+  //console.log(fid);
+  return '';
 }
 
 /*修改标题为当前板块*/
@@ -67,7 +69,8 @@ function GetList(that)
           res.data[i].img_height = 0;
           res.data[i].img_width = 0;
           res.data[i].img_load_success = false;
-          res.data[i].fname = GetFnameByFid(that,res.data[i].fid);
+          if (res.data[i].fid != undefined)
+            res.data[i].fname = GetFnameByFid(that,res.data[i].fid);
           if (res.data[i].admin == 1)
             res.data[i].userid = WxParse.wxParse('item', 'html', "<font class='xuankuhongming'>" + res.data[i].userid + "</font>", that, null).nodes;
           else
@@ -99,7 +102,7 @@ function GetList(that)
 }
 
 /*获得板块列表*/
-function GetFList(that)
+function GetFList(that,success)
 {
   that.setData({loading_f:true});
   AdaoAPI.api_request(
@@ -108,7 +111,6 @@ function GetFList(that)
     null,
     function(res){//success
       var list_temp = [];//板块列表
-      console.log(res.data);
       if(res.data.length > 0)
       {
         for(let i = 0; i < res.data.length; i++)
@@ -124,6 +126,10 @@ function GetFList(that)
           list_temp.push(res.data[i]);
         }
         that.setData({flist : list_temp});
+      }
+      if (success != null)
+      {
+        success();
       }
     },
     function(res){//fail
@@ -190,29 +196,26 @@ Page(
   {
     var that = this;
     GetMainPicture(that);
-    GetFList(that);
-    var select_n = wx.getStorageSync('SelectForumName');
-    if(select_n != "")
-      wx.setNavigationBarTitle({title: select_n});
-    var select_f = wx.getStorageSync('SelectForumID');
+    GetFList(that,function()
+    {
+      var select_n = wx.getStorageSync('SelectForumName');
+      if(select_n != "")
+        wx.setNavigationBarTitle({title: select_n});
+      var select_f = wx.getStorageSync('SelectForumID');
 
-    if(select_f != "")
-      forum_id = select_f;
-    else
-      return;
-    wx.startPullDownRefresh({});
+      if(select_f != "")
+        forum_id = select_f;
+      if (forum_id == -2)//如果没有保存板块，就打开选择栏
+        that.setData({ open: true });
+      else {
+        GetTitle(that);
+        wx.startPullDownRefresh({});
+      }
+    });
   },
 
   onShow:function(e)
-  {
-    if (forum_id==-2)//如果没有保存板块，就打开选择栏
-      this.setData({open : true});
-    else
-    {
-      var that = this;
-      GetTitle(that);
-    }
-  },
+  {},
 
   bind_view_tap: function(e)//单击
   {
@@ -355,7 +358,7 @@ Page(
   {
     var that = this;
     this.setData({flist:[]});
-    GetFList(that);
+    GetFList(that, null);
     GetMainPicture(that);
   },
   tap_cookie:function()//饼干管理器
