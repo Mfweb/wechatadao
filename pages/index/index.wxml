@@ -66,9 +66,10 @@
 <!--底部菜单-->
 <action-sheet hidden="{{!ShowMenu}}" bindchange="MenuChange">
     <block>
-        <action-sheet-item bindtap="tap_cookie">饼干管理器</action-sheet-item>
-        <action-sheet-item bindtap="tap_favorite">收藏管理器</action-sheet-item>
-        <action-sheet-item bindtap="tap_member">用户系统</action-sheet-item>
+      <action-sheet-item bindtap="tap_search">搜索</action-sheet-item>
+      <action-sheet-item bindtap="tap_cookie">饼干管理器</action-sheet-item>
+      <action-sheet-item bindtap="tap_favorite">收藏管理器</action-sheet-item>
+      <action-sheet-item bindtap="tap_member">用户系统</action-sheet-item>
     </block>
     <action-sheet-cancel>取消</action-sheet-cancel>
 </action-sheet>
