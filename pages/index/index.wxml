@@ -28,7 +28,7 @@
   <input wx:if='{{input_mode==2}}' class="input_cs" type="text" value="" bindinput="search_input" />
 </modal>
 <!--主列表-->
-<view class="container {{open?'hiddenScroll':''}}">
+<view class="container {{open?'hiddenScroll':''}}" id="main_list">
   <view class="item" hover-class="item_hover" wx:for="{{list}}" id="{{item.id}}" bindtap="bind_view_tap" wx:key="b_list">
     <view class="text">
       <view class="b1">

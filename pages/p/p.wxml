@@ -6,7 +6,7 @@
 </modal>
 
 <!--列表-->
-<view class="container">
+<view class="container" id="main_list">
   <view class="item" wx:for="{{list}}" id="{{index}}" bindtap="bind_view_tap" bindlongtap="bind_view_long_tap" wx:key="f_list">
     <view class="text">
       <view class="b1">

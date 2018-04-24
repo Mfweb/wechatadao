@@ -8,6 +8,7 @@ var pw_run = false;//防止下拉刷新清空列表的时候触发上拉加载
 var post_run = false;//防止重复请求
 var open_run = false;//防止重复打开
 var search_keyword = null;//搜索关键字
+var mainListQuery = null;
 
 function GetFnameByFid(that, fid) {
   if (fid == -1) return "时间线";
@@ -30,7 +31,6 @@ function GetTitle(that) {
 }
 /*获取板块内串*/
 function GetList(that) {
-  console.log(forum_id);
   if (post_run) return;
   post_run = true;
   that.setData({ bot_text: "正在加载.." });
@@ -189,7 +189,8 @@ Page(
     },
 
     onShow: function (e){
-
+      mainListQuery = wx.createSelectorQuery();
+      mainListQuery.select('#main_list').boundingClientRect();
     },
 
     bind_view_tap: function (e)//单击
@@ -360,5 +361,16 @@ Page(
     },
     search_input: function (e) {//搜索输入
       search_keyword = e['detail'].value;
+    },
+    onPageScroll: function (e) {
+      var that = this;
+      mainListQuery.exec(function (res) {
+        var max_height = res[0].height;
+        if (e.scrollTop > max_height * 0.66)//大于2/3就加载下一页
+        {
+          if (pw_run) return;
+          GetList(that);
+        }
+      })
     }
   })

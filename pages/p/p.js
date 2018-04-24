@@ -13,6 +13,8 @@ var isfeed = false;
 var isfeeding = false;
 var image_list = [];//图片列表
 var po_id = "";
+var mainListQuery = null;
+
 /* 取消订阅 */
 function DelFeed(fid, that) {
   if (isfeeding) return;
@@ -257,8 +259,7 @@ function GetList(that) {
         len = res.data.replys.length - last_length;
       else
         len = res.data.replys.length;
-
-      if (len > 0)//本次拉取的数量大于0就push
+      if (len > 1)//本次拉取的数量大于11就push
       {
         list[0].replyCount = res.data.replyCount;
         for (let i = last_length; i < res.data.replys.length; i++) {
@@ -290,7 +291,7 @@ function GetList(that) {
         that.setData({ list: list });
 
         //console.log(res.data.replys.length + "  " + list.length + "  " +page);
-        if (res.data.replys.length == 19)//本页已经完
+        if (res.data.replys.length >= 19)//本页已经完
         {
           page++;
           last_length = 0;
@@ -356,7 +357,8 @@ Page({
     wx.startPullDownRefresh({});
   },
   onShow: function () {
-
+    mainListQuery = wx.createSelectorQuery();
+    mainListQuery.select('#main_list').boundingClientRect();
   },
   bind_view_tap: function (e)//点击查看引用串内容
   {
@@ -427,6 +429,7 @@ Page({
 
   onReachBottom: function ()//上拉加载更多
   {
+    console.log("ReachBottom");
     if (pw_run) return;
     var that = this;
     GetList(that);
@@ -531,5 +534,17 @@ Page({
       desc: this.data.list[0].title,
       path: "/pages/p/p?id=" + forum_id
     };
+  },
+  onPageScroll: function (e) {
+    var that = this;
+    mainListQuery.exec(function (res) {
+      var max_height = res[0].height;
+      if (e.scrollTop > (max_height * 0.66) && e.scrollTop < (max_height * 0.7))//大于2/3就加载下一页
+      {
+        if (pw_run) return;
+        GetList(that);
+        console.log('ScrollDown');
+      }
+    })
   }
 })
