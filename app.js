@@ -3,8 +3,8 @@ App({
   globalData: {
     url: {
       host: "https://nmb.fastmirror.org",//https://tnmb.org   http://adnmb1.com
-      thumb_img_url: "http://nmbimg.fastmirror.org/thumb/",//缩略图
-      full_img_url: "http://nmbimg.fastmirror.org/image/",//原图
+      thumb_img_url: "",//缩略图
+      full_img_url: "",//原图
 
       timeline_url: "/Api/timeline?appid=wechatapp",//时间线
       show_forum_url: "/Api/showf?appid=wechatapp",//获得板块内串
@@ -15,6 +15,7 @@ App({
       add_feed_url: "/Api/addFeed?appid=wechatapp",//将串添加到订阅列表
       del_feed_url: "/Api/delFeed?appid=wechatapp",//删除某个订阅的串
       search_url: "/Api/search?appid=wechatapp",//搜索
+      getcdn_url: "/Api/getCdnPath?appid=wechatapp",//获取CDN地址
 
       new_thread_url: "/Home/Forum/doPostThread.html?appid=wechatapp",//发送新串
       new_reply_url: "/Home/Forum/doReplyThread.html?appid=wechatapp",//发送新回复
@@ -43,6 +44,25 @@ App({
       this.globalData.url.thumb_img_url = "https://tnmbstatic.fastmirror.org/Public/Upload/thumb/";
       this.globalData.url.full_img_url = "https://tnmbstatic.fastmirror.org/Public/Upload/image/";
     }
+    //获取CDN地址
+    var AdaoAPI = require('API/adao.js');
+    var that = this;
+    AdaoAPI.api_request(null, this.globalData.url.host + this.globalData.url.getcdn_url,null,
+    function(res){
+      var max = 0;
+      for (let i = 0; i < res.data.length; i++) {
+        if(res.data[i].rate > max)
+        {
+          that.globalData.url.thumb_img_url = res.data[i].url + "thumb/"
+          that.globalData.url.full_img_url = res.data[i].url + "image/"
+          max = res.data[i].rate;
+        }
+      }
+    },
+    function(){
+      console.log('get cdn error');
+    },null,null);
+
     var res = wx.getSystemInfoSync();//获取屏幕尺寸
     this.globalData.sysinfo.sys_width = res.windowWidth;
     this.globalData.sysinfo.sys_height = res.windowHeight;
