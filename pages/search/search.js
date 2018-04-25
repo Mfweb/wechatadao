@@ -21,7 +21,6 @@ function GetList(that) {
     appInstance.globalData.url.host + appInstance.globalData.url.search_url,
     pData,
     function (res, that) {//success
-      console.log(res);
       if (res.data == "error"){
         appInstance.showError('搜索失败');
         that.setData({ bot_text: "搜索失败" });

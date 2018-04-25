@@ -21,7 +21,7 @@ App({
       new_reply_url: "/Home/Forum/doReplyThread.html?appid=wechatapp",//发送新回复
 
       top_image_url: "https://mfweb.top/adao/getpicture.php",//首页大图
-      get_cookie_url: "https://mfweb.top/adao/getcookie.php",//小程序不支持获取Cookie 暂时从服务器端拿
+//      get_cookie_url: "https://mfweb.top/adao/getcookie.php",//小程序不支持获取Cookie 暂时从服务器端拿
       get_openid_url: "https://mfweb.top/adao/getopenid.php"//获取用户openid
     },
     userinfo: {//用户标识  用来保存收藏
