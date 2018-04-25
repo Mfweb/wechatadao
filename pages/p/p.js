@@ -259,7 +259,7 @@ function GetList(that) {
         len = res.data.replys.length - last_length;
       else
         len = res.data.replys.length;
-      if (len > 1)//本次拉取的数量大于11就push
+      if (len > 0)//本次拉取的数量大于0就push
       {
         list[0].replyCount = res.data.replyCount;
         for (let i = last_length; i < res.data.replys.length; i++) {
@@ -298,7 +298,10 @@ function GetList(that) {
         }
         else//本页还没满，下次要再拉取
         {
-          last_length = res.data.replys.length;
+          if (res.data.replys[0].id == 9999999)
+            last_length = res.data.replys.length - 1;
+          else
+            last_length = res.data.replys.length + 1;
         }
       }
       else//本次没有拉取到
