@@ -7,7 +7,7 @@
 </loading>
 <!--主列表-->
 <view class="container">
-  <view class="item" hover-class="item_hover" wx:for="{{list}}" id="{{item.id}}" bindtap="bind_view_tap" wx:key="b_list">
+  <view class="item" hover-class="item_hover" wx:for="{{list}}" id="{{item.resto}}" bindtap="bind_view_tap" wx:key="b_list">
     <view class="text">
       <view class="b1">
         <view class="cid">No.{{item.id}}</view>
