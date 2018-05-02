@@ -6,6 +6,7 @@
 </modal>
 
 <!--列表-->
+<view class='top_box'></view>
 <view class="container" id="main_list">
   <view class="item" wx:for="{{list}}" id="{{index}}" bindtap="bind_view_tap" bindlongtap="bind_view_long_tap" wx:key="f_list">
     <view class="text">
@@ -36,7 +37,7 @@
     {{bot_text}}
   </view>
 </view>
-
+<view class='bot_box'></view>
 <!--对某一个串操作的列表-->
 <action-sheet hidden="{{ShowMenu}}" bindchange="MenuChange">
     <block>

@@ -29,7 +29,7 @@ function DelFeed(fid, that) {
     null,
     function (res, that) {//success
       if (res.data == "取消订阅成功!") {
-        appInstance.showError('取消订阅成功');
+        appInstance.showSuccess('取消订阅成功');
         appInstance.get_feed();
         that.setData({ staricon: "../../icons/star.png" });
         isfeed = false;
@@ -58,7 +58,7 @@ function AddFeed(fid, that) {
     null,
     function (res, that) {//success
       if (res.data == "订阅大成功→_→") {
-        appInstance.showError('订阅大成功');
+        appInstance.showSuccess('订阅大成功');
         appInstance.get_feed();
         that.setData({ staricon: "../../icons/star2.png" });
         isfeed = true;

@@ -146,5 +146,12 @@ App({
       image: '../../icons/alert.png',
       duration: 1500
     });
+  },
+  showSuccess: function (title){
+    wx.showToast({
+      title: title,
+      icon: 'success',
+      duration: 1500
+    });
   }
 })
