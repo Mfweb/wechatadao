@@ -16,7 +16,7 @@
   transition: All 0.4s ease; 
   -webkit-transition: All 0.4s ease;
   z-index: 5;
-  box-shadow: 0px 0px 6px 0px #fff;
+  box-shadow: 0px 0px 8px 0px #fff;
 }
 
 .f_image{

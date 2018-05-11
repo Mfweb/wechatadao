@@ -52,7 +52,6 @@
         <view class="timelinefname" hidden="{{item.fname==null}}">{{item.fname}}</view>
         <view class="sage" hidden="{{item.sage==0?true:false}}">SAGE</view>
     </view>
-    <view class="v_hr"></view>
   </view>
     <view class="list_bot">
       {{bot_text}}
@@ -66,13 +65,3 @@
   <image bindtap="tap_nw" mode="aspectFit" class="icons" src="../../icons/new.png"></image>
   <image bindtap="tap_ma" mode="aspectFit" class="icons" src="../../icons/manager.png"></image>
 </view>
-<!--底部菜单-->
-<action-sheet hidden="{{!ShowMenu}}" bindchange="MenuChange">
-    <block>
-      <action-sheet-item bindtap="tap_search">搜索</action-sheet-item>
-      <action-sheet-item bindtap="tap_cookie">饼干管理器</action-sheet-item>
-      <action-sheet-item bindtap="tap_favorite">收藏管理器</action-sheet-item>
-      <action-sheet-item bindtap="tap_member">用户系统</action-sheet-item>
-    </block>
-    <action-sheet-cancel>取消</action-sheet-cancel>
-</action-sheet>

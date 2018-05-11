@@ -164,7 +164,6 @@ Page(
       bot_text: "",
       isloading: false,
       loading_f: false,
-      ShowMenu: false,
       input_mode: 1
     },
 
@@ -316,7 +315,26 @@ Page(
     },
     tap_ma: function ()//管理工具
     {
-      this.setData({ ShowMenu: true });
+      var that = this;
+      wx.showActionSheet({
+        itemList: ['搜索','饼干管理','收藏管理','用户系统'],
+        success:function(res){
+          if(res.tapIndex == 0){
+            that.setData({ modalFlag: false, default_page: 1, input_mode: 2 });
+          }
+          else if(res.tapIndex == 1){
+            wx.navigateTo({ url: '../cookie_manager/cookie_manager' });
+          }
+          else if(res.tapIndex == 2){
+            wx.navigateTo({ url: '../favorite_manager/favorite_manager' });
+          }
+          else if(res.tapIndex == 3){
+            wx.navigateTo({
+              url: '../web/web?url=http://adnmb.com/Member',
+            });
+          }
+        }
+      })
     },
     max_picture: function (res)//查看图片大图
     {
@@ -336,28 +354,9 @@ Page(
       GetFList(that, null);
       GetMainPicture(that);
     },
-    tap_cookie: function ()//饼干管理器
-    {
-      wx.navigateTo({ url: '../cookie_manager/cookie_manager' });
-      this.setData({ ShowMenu: false });
-    },
-    tap_favorite: function ()//收藏管理器
-    {
-      wx.navigateTo({ url: '../favorite_manager/favorite_manager' });
-      this.setData({ ShowMenu: false });
-    },
     MenuChange: function (e)//关闭下部菜单
     {
       this.setData({ ShowMenu: false });
-    },
-    tap_member: function (e) {
-      wx.navigateTo({
-        url: '../web/web?url=http://adnmb.com/Member',
-      });
-      this.setData({ ShowMenu: false });
-    },
-    tap_search: function () {//搜索
-      this.setData({ modalFlag: false, default_page: 1, input_mode: 2, ShowMenu: false });
     },
     search_input: function (e) {//搜索输入
       search_keyword = e['detail'].value;
