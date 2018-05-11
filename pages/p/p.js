@@ -334,7 +334,6 @@ Page({
     bot_text: "",
     modalFlag: true,//显示跳转页面
     default_page: 1,//跳转页面默认值
-    ShowMenu: true,
     open: false,
     q_list: [],
     staricon: "../../icons/star.png"
@@ -384,37 +383,32 @@ Page({
   {
     lont_tap_lock = true;//防止长按抬起时触发tap导致打开查看引用串窗口
     LongTapID = this.data.list[e.currentTarget.id].id;
+    var that = this;
+    wx.showActionSheet({
+      itemList: ['回复', '添加到回复引用列表','举报'],
+      success: function(res){
+        if(res.tapIndex == 0){
+          if (LongTapID == "") return;
+          wx.navigateTo({ url: '../new/new?mode=2&revid=' + forum_id + "&rev_text=>>No." + LongTapID + "\n" });
+          LongTapID = "";
+        }
+        else if(res.tapIndex == 1){
+          if (LongTapID != "") {
+            var temp = wx.getStorageSync('ReplyIDList');
+            temp += ">>No." + LongTapID + "\n";
+            wx.setStorageSync('ReplyIDList', temp);
+          }
+        }
+        else if(res.tapIndex == 2){
+          wx.navigateTo({ url: '../new/new?mode=3&revid=18&rev_text=>>No.' + LongTapID });
+          LongTapID = "";
+        }
+      },
+      complete: function(){
+        lont_tap_lock = false;//解除tap锁
+      }
+    })
     this.setData({ ShowMenu: false });
-  },
-  MenuChange: function (e)//关闭下部菜单
-  {
-    this.setData({ ShowMenu: true });
-    lont_tap_lock = false;//解除tap锁
-  },
-  th_reply: function (e)//引用指定No.
-  {
-    if (LongTapID == "") return;
-    wx.navigateTo({ url: '../new/new?mode=2&revid=' + forum_id + "&rev_text=>>No." + LongTapID + "\n" });
-    LongTapID = "";
-    this.setData({ ShowMenu: true });
-    lont_tap_lock = false;//解除tap锁
-  },
-  add_reply_list: function (e)//添加到引用列表
-  {
-    if (LongTapID != "") {
-      var temp = wx.getStorageSync('ReplyIDList');
-      temp += ">>No." + LongTapID + "\n";
-      wx.setStorageSync('ReplyIDList', temp);
-      this.setData({ ShowMenu: true });
-      lont_tap_lock = false;//解除tap锁
-    }
-  },
-  th_report: function (e)//举报这个回复
-  {
-    wx.navigateTo({ url: '../new/new?mode=3&revid=18&rev_text=>>No.' + LongTapID });
-    LongTapID = "";
-    this.setData({ ShowMenu: true });
-    lont_tap_lock = false;//解除tap锁
   },
   onPullDownRefresh: function ()//下拉刷新
   {

@@ -36,15 +36,6 @@
   </view>
 </view>
 <view class='bot_box'></view>
-<!--对某一个串操作的列表-->
-<action-sheet hidden="{{ShowMenu}}" bindchange="MenuChange">
-    <block>
-        <action-sheet-item bindtap="th_reply">回复</action-sheet-item>
-        <action-sheet-item bindtap="add_reply_list">添加到回复引用列表</action-sheet-item>
-        <action-sheet-item bindtap="th_report">举报</action-sheet-item>
-    </block>
-    <action-sheet-cancel>取消</action-sheet-cancel>
-</action-sheet>
 <!--底部icon-->
 <view class="footer">
   <image bindtap="tap_report" mode="aspectFit" class="icons" src="../../icons/110.png"></image>
