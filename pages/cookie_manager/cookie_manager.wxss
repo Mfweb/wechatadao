@@ -7,18 +7,21 @@
 
 .cookieiteam{
     width: 100%;
-    margin: 0 auto;
     display: flex;
+    justify-content: space-between;
 }
 
 .enablecookie{
     background-color: #98F5FF;
 }
 
-.noenablecookie{
-
-}
-
 .ck_icon{
-    margin-top: 2px;
+  text-align: center;
+  margin: 0 auto;
+  margin-left: 3px;
+  height: 30px;
+  width: 120px;
+}
+.CookieItem{
+  width: 70%;
 }

@@ -1,10 +1,13 @@
 <view class="container">
     <view class="cookielist" wx:for="{{cookie_list}}" wx:key="ck">
-        <view class="cookieiteam {{index==0?'enablecookie':'noenablecookie'}}">
-            <view>{{item}}</view>
-            <icon bindtap="disable_cookie" class="ck_icon" type="clear" wx:if="{{index==0&&item!='null'}}" size="40" id="{{index}}"/>
-            <icon bindtap="enable_cookie" class="ck_icon" type="success_circle" wx:if="{{index!=0}}" size="45" color="green" id="{{index}}"/>
-            <icon bindtap="delete_cookie" wx:if="{{(index==0&&item!='null')||index!=0}}" class="ck_icon" type="cancel" size="45" color="red" id="{{index}}"/>
+        <view class="cookieiteam{{index==0?' enablecookie':''}}">
+            <view class='CookieItem'>{{item}}</view>
+            <!--<icon bindtap="disable_cookie" class="ck_icon" type="clear" wx:if="{{index==0&&item!='null'}}" size="40" id="{{index}}"/>-->
+            <button wx:if="{{index==0&&item!='null'}}" class="ck_icon" type='default' id="{{index}}" size='mini' bindtap='disable_cookie' >禁用</button>
+            <!--<icon bindtap="enable_cookie" class="ck_icon" type="success_circle" wx:if="{{index!=0}}" size="45" color="green" id="{{index}}"/>-->
+            <button wx:if="{{index!=0}}" type='primary' class="ck_icon" id="{{index}}" size='mini' bindtap='enable_cookie' >激活</button>
+            <!--<icon bindtap="delete_cookie" wx:if="{{(index==0&&item!='null')||index!=0}}" class="ck_icon" type="cancel" size="45" color="red" id="{{index}}"/>-->
+            <button wx:if="{{(index==0&&item!='null')||index!=0}}" class="ck_icon" type='warn' id="{{index}}" size='mini' bindtap='delete_cookie' >删除</button>
         </view>
         <view class="v_hr"></view>
     </view>
