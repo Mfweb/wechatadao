@@ -408,7 +408,6 @@ Page({
         lont_tap_lock = false;//解除tap锁
       }
     })
-    this.setData({ ShowMenu: false });
   },
   onPullDownRefresh: function ()//下拉刷新
   {

@@ -1,5 +1,5 @@
 {
     "navigationBarTitleText": "饼干管理",
-    "enablePullDownRefresh": true,
+    "enablePullDownRefresh": false,
     "backgroundColor": "#00CCFF"
 }

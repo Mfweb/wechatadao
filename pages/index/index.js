@@ -354,10 +354,6 @@ Page(
       GetFList(that, null);
       GetMainPicture(that);
     },
-    MenuChange: function (e)//关闭下部菜单
-    {
-      this.setData({ ShowMenu: false });
-    },
     search_input: function (e) {//搜索输入
       search_keyword = e['detail'].value;
     },
